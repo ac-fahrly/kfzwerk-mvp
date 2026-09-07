@@ -54,6 +54,7 @@ export function TermineCalendar({ termine, onCreate, onOpen }: Props) {
   const weekdaysDe = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
   const weekdaysEn = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const weekdays = locale === 'de' ? weekdaysDe : weekdaysEn;
+  const isWeekendCol = (i: number) => i >= 5;
 
   return (
     <div className="rounded-lg border bg-card">
@@ -70,22 +71,26 @@ export function TermineCalendar({ termine, onCreate, onOpen }: Props) {
         </div>
       </div>
       <div className="grid grid-cols-7 border-b bg-muted/40 text-xs text-muted-foreground">
-        {weekdays.map((w) => (
-          <div key={w} className="p-2 text-center font-medium">{w}</div>
+        {weekdays.map((w, i) => (
+          <div key={w} className={cn('p-2 text-center font-medium', isWeekendCol(i) && 'text-muted-foreground/60')}>
+            {w}
+          </div>
         ))}
       </div>
       <div className="grid grid-cols-7">
-        {days.map((day) => {
+        {days.map((day, i) => {
           const iso = format(day, 'yyyy-MM-dd');
           const dayItems = byDay.get(iso) ?? [];
           const inMonth = isSameMonth(day, cursor);
           const today = isToday(day);
+          const weekend = isWeekendCol(i % 7);
           return (
             <div
               key={iso}
               className={cn(
                 'group min-h-[110px] border-b border-r p-1.5 last:border-r-0',
                 !inMonth && 'bg-muted/20 text-muted-foreground',
+                inMonth && weekend && 'bg-muted/30',
               )}
             >
               <div className="mb-1 flex items-center justify-between">

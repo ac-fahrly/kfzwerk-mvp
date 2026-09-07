@@ -3,9 +3,10 @@
   "description": "Workshop Management — Prototype",
   "kpi": {
     "openInvoices": "Open invoices",
+    "overdue": "Overdue",
     "invoicesCount": "{count} invoices",
-    "activeOrders": "Active orders",
-    "appointmentsTotal": "Appointments (total)",
-    "partsInCatalog": "Parts in catalog"
+    "appointmentsToday": "Appointments today",
+    "lowStock": "Low stock",
+    "lowStockSub": "items below min. stock"
   }
 }

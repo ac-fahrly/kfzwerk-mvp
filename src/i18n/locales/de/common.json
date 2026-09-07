@@ -30,6 +30,15 @@
   "language": {
     "label": "Sprache"
   },
+  "toasts": {
+    "created": "Angelegt",
+    "saved": "Gespeichert",
+    "deleted": "Gelöscht"
+  },
+  "empty": {
+    "noMatches": "Keine Treffer",
+    "noMatchesDescription": "Passe die Suche oder Filter an."
+  },
   "status": {
     "neu": "Neu",
     "in_arbeit": "In Arbeit",
@@ -47,8 +56,8 @@
     "abgeschlossen": "Abgeschlossen",
     "abgesagt": "Abgesagt",
     "stufe_1": "Zahlungserinnerung",
-    "stufe_2": "Mahnung 1",
-    "stufe_3": "Mahnung 2",
+    "stufe_2": "1. Mahnung",
+    "stufe_3": "2. Mahnung",
     "inkasso": "Inkasso",
     "erledigt": "Erledigt"
   },
@@ -111,7 +120,7 @@
     "lieferantRequired": "Lieferant erforderlich",
     "rechnungRequired": "Rechnung erforderlich",
     "positionRequired": "Mindestens eine Position",
-    "invalidTime": "Format HH:MM",
+    "invalidTime": "Bitte HH:MM",
     "endBeforeStart": "Ende muss nach Beginn liegen",
     "tooSmall": "Zu klein",
     "invalidFormat": "Ungültiges Format"

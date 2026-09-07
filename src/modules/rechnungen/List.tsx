@@ -17,6 +17,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ConfirmDialog } from '@/components/shared/confirm';
 import { useT } from '@/i18n';
+import { toast } from '@/store/toast-store';
 import { customerById } from '@/modules/shared/customers';
 import { useRechnungen } from './store';
 import { offenerBetrag, rechnungStatusList, type Rechnung } from './types';
@@ -46,9 +47,9 @@ export function RechnungenList() {
 
   const columns: Column<Rechnung>[] = [
     { key: 'nummer', header: t('cols.nummer'), sortValue: (r) => r.nummer, cell: (r) => <span className="num text-xs">{r.nummer}</span>, width: '140px' },
-    { key: 'datum', header: t('cols.datum'), sortValue: (r) => r.datum, cell: (r) => <DateCell value={r.datum} />, width: '110px' },
+    { key: 'datum', header: t('cols.datum'), align: 'right', sortValue: (r) => r.datum, cell: (r) => <DateCell value={r.datum} />, width: '110px' },
     { key: 'kunde', header: t('cols.kunde'), sortValue: (r) => customerById(r.customerId)?.name ?? '', cell: (r) => <span className="font-medium">{customerById(r.customerId)?.name ?? '—'}</span> },
-    { key: 'faellig', header: t('cols.faellig'), sortValue: (r) => r.faelligDatum, cell: (r) => <DateCell value={r.faelligDatum} />, width: '110px' },
+    { key: 'faellig', header: t('cols.faellig'), align: 'right', sortValue: (r) => r.faelligDatum, cell: (r) => <DateCell value={r.faelligDatum} />, width: '110px' },
     { key: 'status', header: t('cols.status'), sortValue: (r) => r.status, cell: (r) => <StatusBadge status={r.status} />, width: '150px' },
     { key: 'betrag', header: t('cols.gesamt'), align: 'right', sortValue: (r) => r.betrag, cell: (r) => <Money value={r.betrag} />, width: '120px' },
     { key: 'offen', header: t('cols.offen'), align: 'right', sortValue: (r) => offenerBetrag(r), cell: (r) => <Money value={offenerBetrag(r)} />, width: '120px' },
@@ -64,7 +65,7 @@ export function RechnungenList() {
             trigger={<Button variant="ghost" size="icon" aria-label={tc('actions.delete')}><Trash2 size={16} /></Button>}
             title={t('delete.title')}
             description={t('delete.description', { nummer: r.nummer })}
-            onConfirm={() => remove(r.id)}
+            onConfirm={() => { remove(r.id); toast.success(tc('toasts.deleted')); }}
           />
         </div>
       ),
@@ -103,24 +104,28 @@ export function RechnungenList() {
         getRowId={(r) => r.id}
         onRowClick={(r) => setModal({ kind: 'view', item: r })}
         emptyState={
-          <EmptyState
-            icon={FileText}
-            title={t('empty.title')}
-            description={t('empty.description')}
-            action={
-              <Button onClick={() => setModal({ kind: 'create' })}>
-                <Plus size={16} />
-                {t('list.newInvoice')}
-              </Button>
-            }
-          />
+          items.length === 0 ? (
+            <EmptyState
+              icon={FileText}
+              title={t('empty.title')}
+              description={t('empty.description')}
+              action={
+                <Button onClick={() => setModal({ kind: 'create' })}>
+                  <Plus size={16} />
+                  {t('list.newInvoice')}
+                </Button>
+              }
+            />
+          ) : (
+            <EmptyState icon={FileText} title={tc('empty.noMatches')} description={tc('empty.noMatchesDescription')} />
+          )
         }
       />
 
       <Dialog open={modal?.kind === 'create'} onOpenChange={(o) => !o && setModal(null)}>
         <DialogContent className="max-w-2xl">
           <DialogHeader><DialogTitle>{t('form.newTitle')}</DialogTitle></DialogHeader>
-          <RechnungForm onSubmit={(r) => { add(r); setModal(null); }} onCancel={() => setModal(null)} />
+          <RechnungForm onSubmit={(r) => { add(r); toast.success(tc('toasts.created')); setModal(null); }} onCancel={() => setModal(null)} />
         </DialogContent>
       </Dialog>
 
@@ -130,7 +135,7 @@ export function RechnungenList() {
           {modal?.kind === 'edit' ? (
             <RechnungForm
               initial={modal.item}
-              onSubmit={(r) => { update(modal.item.id, r); setModal(null); }}
+              onSubmit={(r) => { update(modal.item.id, r); toast.success(tc('toasts.saved')); setModal(null); }}
               onCancel={() => setModal(null)}
             />
           ) : null}

@@ -17,6 +17,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ConfirmDialog } from '@/components/shared/confirm';
 import { useT } from '@/i18n';
+import { toast } from '@/store/toast-store';
 import { customerById, vehicleById } from '@/modules/shared/customers';
 import { useBestellungen } from './store';
 import { berechneSumme, bestellStatusList, type Bestellung } from './types';
@@ -47,7 +48,7 @@ export function BestellungenList() {
 
   const columns: Column<Bestellung>[] = [
     { key: 'nummer', header: t('cols.nummer'), sortValue: (r) => r.nummer, cell: (r) => <span className="num text-xs">{r.nummer}</span>, width: '130px' },
-    { key: 'eingang', header: t('cols.eingang'), sortValue: (r) => r.eingangDatum, cell: (r) => <DateCell value={r.eingangDatum} />, width: '110px' },
+    { key: 'eingang', header: t('cols.eingang'), align: 'right', sortValue: (r) => r.eingangDatum, cell: (r) => <DateCell value={r.eingangDatum} />, width: '110px' },
     {
       key: 'kunde',
       header: t('cols.kunde'),
@@ -83,7 +84,7 @@ export function BestellungenList() {
             trigger={<Button variant="ghost" size="icon" aria-label={tc('actions.delete')}><Trash2 size={16} /></Button>}
             title={t('delete.title')}
             description={t('delete.description', { nummer: r.nummer })}
-            onConfirm={() => remove(r.id)}
+            onConfirm={() => { remove(r.id); toast.success(tc('toasts.deleted')); }}
           />
         </div>
       ),
@@ -124,24 +125,28 @@ export function BestellungenList() {
         getRowId={(r) => r.id}
         onRowClick={(r) => setModal({ kind: 'view', item: r })}
         emptyState={
-          <EmptyState
-            icon={ClipboardList}
-            title={t('empty.title')}
-            description={t('empty.description')}
-            action={
-              <Button onClick={() => setModal({ kind: 'create' })}>
-                <Plus size={16} />
-                {t('list.newOrder')}
-              </Button>
-            }
-          />
+          items.length === 0 ? (
+            <EmptyState
+              icon={ClipboardList}
+              title={t('empty.title')}
+              description={t('empty.description')}
+              action={
+                <Button onClick={() => setModal({ kind: 'create' })}>
+                  <Plus size={16} />
+                  {t('list.newOrder')}
+                </Button>
+              }
+            />
+          ) : (
+            <EmptyState icon={ClipboardList} title={tc('empty.noMatches')} description={tc('empty.noMatchesDescription')} />
+          )
         }
       />
 
       <Dialog open={modal?.kind === 'create'} onOpenChange={(o) => !o && setModal(null)}>
         <DialogContent className="max-w-4xl">
           <DialogHeader><DialogTitle>{t('form.newTitle')}</DialogTitle></DialogHeader>
-          <BestellungForm onSubmit={(b) => { add(b); setModal(null); }} onCancel={() => setModal(null)} />
+          <BestellungForm onSubmit={(b) => { add(b); toast.success(tc('toasts.created')); setModal(null); }} onCancel={() => setModal(null)} />
         </DialogContent>
       </Dialog>
 
@@ -151,7 +156,7 @@ export function BestellungenList() {
           {modal?.kind === 'edit' ? (
             <BestellungForm
               initial={modal.item}
-              onSubmit={(b) => { update(modal.item.id, b); setModal(null); }}
+              onSubmit={(b) => { update(modal.item.id, b); toast.success(tc('toasts.saved')); setModal(null); }}
               onCancel={() => setModal(null)}
             />
           ) : null}

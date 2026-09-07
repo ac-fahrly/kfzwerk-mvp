@@ -16,6 +16,7 @@ import {
 import { ConfirmDialog } from '@/components/shared/confirm';
 import { formatNumber } from '@/lib/format';
 import { useT } from '@/i18n';
+import { toast } from '@/store/toast-store';
 import { useTeile } from './store';
 import type { Teil } from './types';
 import { TeilForm } from './Form';
@@ -76,7 +77,7 @@ export function TeileList() {
             }
             title={t('delete.title')}
             description={t('delete.description', { name: r.bezeichnung })}
-            onConfirm={() => remove(r.id)}
+            onConfirm={() => { remove(r.id); toast.success(tc('toasts.deleted')); }}
           />
         </div>
       ),
@@ -111,17 +112,21 @@ export function TeileList() {
         getRowId={(r) => r.id}
         onRowClick={(r) => setEditing(r)}
         emptyState={
-          <EmptyState
-            icon={Package}
-            title={t('empty.title')}
-            description={t('empty.description')}
-            action={
-              <Button onClick={() => setCreating(true)}>
-                <Plus size={16} />
-                {t('list.newPart')}
-              </Button>
-            }
-          />
+          items.length === 0 ? (
+            <EmptyState
+              icon={Package}
+              title={t('empty.title')}
+              description={t('empty.description')}
+              action={
+                <Button onClick={() => setCreating(true)}>
+                  <Plus size={16} />
+                  {t('list.newPart')}
+                </Button>
+              }
+            />
+          ) : (
+            <EmptyState icon={Package} title={tc('empty.noMatches')} description={tc('empty.noMatchesDescription')} />
+          )
         }
       />
 
@@ -131,7 +136,7 @@ export function TeileList() {
             <DialogTitle>{t('form.newTitle')}</DialogTitle>
           </DialogHeader>
           <TeilForm
-            onSubmit={(x) => { add(x); setCreating(false); }}
+            onSubmit={(x) => { add(x); toast.success(tc('toasts.created')); setCreating(false); }}
             onCancel={() => setCreating(false)}
           />
         </DialogContent>
@@ -145,7 +150,7 @@ export function TeileList() {
           {editing ? (
             <TeilForm
               initial={editing}
-              onSubmit={(x) => { update(editing.id, x); setEditing(null); }}
+              onSubmit={(x) => { update(editing.id, x); toast.success(tc('toasts.saved')); setEditing(null); }}
               onCancel={() => setEditing(null)}
             />
           ) : null}

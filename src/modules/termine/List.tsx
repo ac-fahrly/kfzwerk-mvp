@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ConfirmDialog } from '@/components/shared/confirm';
 import { useT } from '@/i18n';
+import { toast } from '@/store/toast-store';
 import { customerById, vehicleById } from '@/modules/shared/customers';
 import { useTermine } from './store';
 import { terminStatusList, type Termin } from './types';
@@ -51,7 +52,7 @@ export function TermineList() {
   }, [items, q, statusFilter]);
 
   const columns: Column<Termin>[] = [
-    { key: 'datum', header: t('cols.datum'), sortValue: (r) => `${r.datum} ${r.von}`, cell: (r) => <DateCell value={r.datum} />, width: '110px' },
+    { key: 'datum', header: t('cols.datum'), align: 'right', sortValue: (r) => `${r.datum} ${r.von}`, cell: (r) => <DateCell value={r.datum} />, width: '110px' },
     { key: 'zeit', header: t('cols.zeit'), align: 'right', sortValue: (r) => r.von, cell: (r) => (
       <span className="num"><TimeCell value={`${r.datum}T${r.von}`} />–<TimeCell value={`${r.datum}T${r.bis}`} /></span>
     ), width: '130px' },
@@ -74,7 +75,7 @@ export function TermineList() {
           <ConfirmDialog
             trigger={<Button variant="ghost" size="icon" aria-label={tc('actions.delete')}><Trash2 size={16} /></Button>}
             title={t('delete.title')}
-            onConfirm={() => remove(r.id)}
+            onConfirm={() => { remove(r.id); toast.success(tc('toasts.deleted')); }}
           />
         </div>
       ),
@@ -129,17 +130,21 @@ export function TermineList() {
             getRowId={(r) => r.id}
             onRowClick={(r) => setModal({ kind: 'view', item: r })}
             emptyState={
-              <EmptyState
-                icon={CalIcon}
-                title={t('empty.title')}
-                description={t('empty.description')}
-                action={
-                  <Button onClick={() => setModal({ kind: 'create' })}>
-                    <Plus size={16} />
-                    {t('list.newAppointment')}
-                  </Button>
-                }
-              />
+              items.length === 0 ? (
+                <EmptyState
+                  icon={CalIcon}
+                  title={t('empty.title')}
+                  description={t('empty.description')}
+                  action={
+                    <Button onClick={() => setModal({ kind: 'create' })}>
+                      <Plus size={16} />
+                      {t('list.newAppointment')}
+                    </Button>
+                  }
+                />
+              ) : (
+                <EmptyState icon={CalIcon} title={tc('empty.noMatches')} description={tc('empty.noMatchesDescription')} />
+              )
             }
           />
         </TabsContent>
@@ -150,7 +155,7 @@ export function TermineList() {
           <DialogHeader><DialogTitle>{t('form.newTitle')}</DialogTitle></DialogHeader>
           <TerminForm
             defaultDate={modal?.kind === 'create' ? modal.defaultDate : undefined}
-            onSubmit={(x) => { add(x); setModal(null); }}
+            onSubmit={(x) => { add(x); toast.success(tc('toasts.created')); setModal(null); }}
             onCancel={() => setModal(null)}
           />
         </DialogContent>
@@ -162,7 +167,7 @@ export function TermineList() {
           {modal?.kind === 'edit' ? (
             <TerminForm
               initial={modal.item}
-              onSubmit={(x) => { update(modal.item.id, x); setModal(null); }}
+              onSubmit={(x) => { update(modal.item.id, x); toast.success(tc('toasts.saved')); setModal(null); }}
               onCancel={() => setModal(null)}
             />
           ) : null}

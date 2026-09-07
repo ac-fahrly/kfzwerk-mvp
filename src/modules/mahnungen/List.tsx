@@ -18,6 +18,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ConfirmDialog } from '@/components/shared/confirm';
 import { useT } from '@/i18n';
+import { toast } from '@/store/toast-store';
 import { customerById } from '@/modules/shared/customers';
 import { useRechnungen } from '@/modules/rechnungen/store';
 import { rechnungById } from '@/modules/rechnungen/store';
@@ -56,11 +57,11 @@ export function MahnungenList() {
 
   const columns: Column<Mahnung>[] = [
     { key: 'nummer', header: t('cols.nummer'), sortValue: (r) => r.nummer, cell: (r) => <span className="num text-xs">{r.nummer}</span>, width: '130px' },
-    { key: 'datum', header: t('cols.datum'), sortValue: (r) => r.datum, cell: (r) => <DateCell value={r.datum} />, width: '110px' },
+    { key: 'datum', header: t('cols.datum'), align: 'right', sortValue: (r) => r.datum, cell: (r) => <DateCell value={r.datum} />, width: '110px' },
     { key: 'kunde', header: t('cols.kunde'), sortValue: (r) => customerById(r.customerId)?.name ?? '', cell: (r) => <span className="font-medium">{customerById(r.customerId)?.name ?? '—'}</span> },
     { key: 'rechnung', header: t('cols.rechnung'), sortValue: (r) => rechnungById(r.rechnungId)?.nummer ?? '', cell: (r) => <span className="num text-xs text-muted-foreground">{rechnungById(r.rechnungId)?.nummer ?? '—'}</span>, width: '140px' },
     { key: 'status', header: t('cols.stufe'), sortValue: (r) => r.status, cell: (r) => <StatusBadge status={r.status} />, width: '190px' },
-    { key: 'faellig', header: t('cols.faellig'), sortValue: (r) => r.faelligDatum, cell: (r) => <DateCell value={r.faelligDatum} />, width: '110px' },
+    { key: 'faellig', header: t('cols.faellig'), align: 'right', sortValue: (r) => r.faelligDatum, cell: (r) => <DateCell value={r.faelligDatum} />, width: '110px' },
     { key: 'offen', header: t('cols.offen'), align: 'right', sortValue: (r) => r.offenerBetrag, cell: (r) => <Money value={r.offenerBetrag} />, width: '120px' },
     { key: 'gebuehr', header: t('cols.gebuehr'), align: 'right', sortValue: (r) => r.mahngebuehr, cell: (r) => <Money value={r.mahngebuehr} />, width: '110px' },
     {
@@ -74,7 +75,7 @@ export function MahnungenList() {
           <ConfirmDialog
             trigger={<Button variant="ghost" size="icon" aria-label={tc('actions.delete')}><Trash2 size={16} /></Button>}
             title={t('delete.title')}
-            onConfirm={() => remove(r.id)}
+            onConfirm={() => { remove(r.id); toast.success(tc('toasts.deleted')); }}
           />
         </div>
       ),
@@ -106,7 +107,7 @@ export function MahnungenList() {
       />
 
       {kandidaten.length > 0 ? (
-        <Card className="mb-4 border-warning/50 bg-warning/5">
+        <Card className="mb-4 border-warning/60 bg-warning/15 dark:bg-warning/20">
           <CardContent className="p-4">
             <div className="mb-2 text-sm font-medium">
               {kandidaten.length === 1
@@ -133,24 +134,28 @@ export function MahnungenList() {
         getRowId={(r) => r.id}
         onRowClick={(r) => setModal({ kind: 'view', item: r })}
         emptyState={
-          <EmptyState
-            icon={Receipt}
-            title={t('empty.title')}
-            description={t('empty.description')}
-            action={
-              <Button onClick={() => setModal({ kind: 'create' })}>
-                <Plus size={16} />
-                {t('list.newMahnung')}
-              </Button>
-            }
-          />
+          items.length === 0 ? (
+            <EmptyState
+              icon={Receipt}
+              title={t('empty.title')}
+              description={t('empty.description')}
+              action={
+                <Button onClick={() => setModal({ kind: 'create' })}>
+                  <Plus size={16} />
+                  {t('list.newMahnung')}
+                </Button>
+              }
+            />
+          ) : (
+            <EmptyState icon={Receipt} title={tc('empty.noMatches')} description={tc('empty.noMatchesDescription')} />
+          )
         }
       />
 
       <Dialog open={modal?.kind === 'create'} onOpenChange={(o) => !o && setModal(null)}>
         <DialogContent className="max-w-xl">
           <DialogHeader><DialogTitle>{t('form.newTitle')}</DialogTitle></DialogHeader>
-          <MahnungForm onSubmit={(m) => { add(m); setModal(null); }} onCancel={() => setModal(null)} />
+          <MahnungForm onSubmit={(m) => { add(m); toast.success(tc('toasts.created')); setModal(null); }} onCancel={() => setModal(null)} />
         </DialogContent>
       </Dialog>
 
@@ -160,7 +165,7 @@ export function MahnungenList() {
           {modal?.kind === 'edit' ? (
             <MahnungForm
               initial={modal.item}
-              onSubmit={(m) => { update(modal.item.id, m); setModal(null); }}
+              onSubmit={(m) => { update(modal.item.id, m); toast.success(tc('toasts.saved')); setModal(null); }}
               onCancel={() => setModal(null)}
             />
           ) : null}

@@ -30,6 +30,15 @@
   "language": {
     "label": "Language"
   },
+  "toasts": {
+    "created": "Created",
+    "saved": "Saved",
+    "deleted": "Deleted"
+  },
+  "empty": {
+    "noMatches": "No matches",
+    "noMatchesDescription": "Adjust the search or filters."
+  },
   "status": {
     "neu": "New",
     "in_arbeit": "In progress",
@@ -45,7 +54,7 @@
     "geplant": "Scheduled",
     "bestaetigt": "Confirmed",
     "abgeschlossen": "Completed",
-    "abgesagt": "Cancelled",
+    "abgesagt": "No show",
     "stufe_1": "Payment reminder",
     "stufe_2": "Dunning 1",
     "stufe_3": "Dunning 2",
@@ -64,19 +73,19 @@
   "grund": {
     "Inspektion": "Inspection",
     "Reifenwechsel": "Tire change",
-    "HU / AU": "MOT / emissions",
+    "HU / AU": "HU / AU",
     "Bremsen": "Brakes",
     "Klimaservice": "A/C service",
     "Ölwechsel": "Oil change",
     "Diagnose": "Diagnostics",
-    "Karosseriearbeit": "Body work",
+    "Karosseriearbeit": "Bodywork",
     "Sonstiges": "Other"
   },
   "einheit": {
     "Stk": "pcs",
     "Satz": "set",
     "Paar": "pair",
-    "kanne": "jug",
+    "kanne": "can",
     "Flasche": "bottle",
     "Pauschal": "flat",
     "l": "l",
@@ -111,7 +120,7 @@
     "lieferantRequired": "Supplier required",
     "rechnungRequired": "Invoice required",
     "positionRequired": "At least one position",
-    "invalidTime": "Format HH:MM",
+    "invalidTime": "Time format HH:MM",
     "endBeforeStart": "End must be after start",
     "tooSmall": "Too small",
     "invalidFormat": "Invalid format"

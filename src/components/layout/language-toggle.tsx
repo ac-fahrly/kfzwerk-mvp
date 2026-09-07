@@ -1,10 +1,11 @@
-import { useI18n } from '@/i18n';
+import { useI18n, useT } from '@/i18n';
 import { cn } from '@/lib/utils';
 
 export function LanguageToggle() {
   const { locale, setLocale } = useI18n();
+  const { t } = useT('common');
   return (
-    <div role="group" aria-label="Language" className="flex overflow-hidden rounded-md border">
+    <div role="group" aria-label={t('language.label')} className="flex overflow-hidden rounded-md border">
       <button
         type="button"
         onClick={() => setLocale('de')}

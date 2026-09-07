@@ -3,9 +3,10 @@
   "description": "Werkstatt-Verwaltung — Prototype",
   "kpi": {
     "openInvoices": "Offene Rechnungen",
+    "overdue": "Überfällig",
     "invoicesCount": "{count} Rechnungen",
-    "activeOrders": "Aktive Bestellungen",
-    "appointmentsTotal": "Termine (gesamt)",
-    "partsInCatalog": "Teile im Katalog"
+    "appointmentsToday": "Termine heute",
+    "lowStock": "Bestand niedrig",
+    "lowStockSub": "Artikel unter Mindestbestand"
   }
 }
