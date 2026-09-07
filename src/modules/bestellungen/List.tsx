@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ClipboardList, Pencil, Plus, Trash2 } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
-import { DataTable, type Column, type Density } from '@/components/shared/data-table';
+import { DataTable, type Column } from '@/components/shared/data-table';
 import { TableToolbar } from '@/components/shared/table-toolbar';
 import { EmptyState } from '@/components/shared/empty-state';
 import { Money } from '@/components/shared/money';
@@ -43,7 +43,6 @@ export function BestellungenList() {
   const [q, setQ] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('alle');
   const [modal, setModal] = useState<ModalMode>(null);
-  const [density, setDensity] = useState<Density>('comfortable');
 
   useEffect(() => {
     if (!id) {
@@ -150,8 +149,6 @@ export function BestellungenList() {
       />
 
       <TableToolbar
-        density={density}
-        onDensityChange={setDensity}
         onExport={() => downloadCsv(`bestellungen-${new Date().toISOString().slice(0, 10)}`, columns, filtered)}
       />
 
@@ -159,7 +156,6 @@ export function BestellungenList() {
         columns={columns}
         rows={filtered}
         getRowId={(r) => r.id}
-        density={density}
         onRowClick={(r) => navigate(`${BASE}/${r.id}`)}
         emptyState={
           items.length === 0 ? (
