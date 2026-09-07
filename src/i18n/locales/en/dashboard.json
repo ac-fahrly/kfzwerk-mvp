@@ -1,0 +1,11 @@
+{
+  "title": "Overview",
+  "description": "Workshop Management — Prototype",
+  "kpi": {
+    "openInvoices": "Open invoices",
+    "invoicesCount": "{count} invoices",
+    "activeOrders": "Active orders",
+    "appointmentsTotal": "Appointments (total)",
+    "partsInCatalog": "Parts in catalog"
+  }
+}

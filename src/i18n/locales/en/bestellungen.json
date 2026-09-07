@@ -1,0 +1,46 @@
+{
+  "list": {
+    "title": "Orders",
+    "description": "Customer orders and their line items.",
+    "newOrder": "New order"
+  },
+  "cols": {
+    "nummer": "Number",
+    "eingang": "Received",
+    "kunde": "Customer",
+    "fahrzeug": "Vehicle",
+    "status": "Status",
+    "brutto": "Gross"
+  },
+  "empty": {
+    "title": "No orders",
+    "description": "Create your first customer order."
+  },
+  "form": {
+    "newTitle": "New order",
+    "editTitle": "Edit order",
+    "nummer": "Number",
+    "eingang": "Received",
+    "beschreibung": "Description",
+    "positionen": "Line items",
+    "addPart": "+ Part from catalog",
+    "addWork": "Labor",
+    "kindArbeit": "Labor",
+    "kindTeil": "Part",
+    "art": "Type",
+    "bezeichnung": "Name",
+    "menge": "Qty",
+    "einheit": "Unit",
+    "einzelpreis": "Unit price",
+    "summe": "Total"
+  },
+  "detail": {
+    "title": "Order",
+    "eingang": "Received",
+    "fertigstellung": "Completed"
+  },
+  "delete": {
+    "title": "Delete order?",
+    "description": "\"{nummer}\" will be permanently removed."
+  }
+}

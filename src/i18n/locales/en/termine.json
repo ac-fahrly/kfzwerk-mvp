@@ -1,0 +1,42 @@
+{
+  "list": {
+    "title": "Appointments",
+    "description": "Workshop appointments — calendar and list.",
+    "newAppointment": "New appointment",
+    "calendarTab": "Calendar",
+    "listTab": "List"
+  },
+  "cols": {
+    "datum": "Date",
+    "zeit": "Time",
+    "kunde": "Customer",
+    "fahrzeug": "Vehicle",
+    "grund": "Reason",
+    "techniker": "Technician",
+    "status": "Status"
+  },
+  "empty": {
+    "title": "No appointments",
+    "description": "Create your first appointment."
+  },
+  "form": {
+    "newTitle": "New appointment",
+    "editTitle": "Edit appointment",
+    "servicegrund": "Service reason",
+    "techniker": "Technician"
+  },
+  "calendar": {
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "andMore": "+{n} more",
+    "addAppointment": "Add appointment"
+  },
+  "detail": {
+    "title": "Appointment",
+    "grund": "Reason",
+    "techniker": "Technician"
+  },
+  "delete": {
+    "title": "Delete appointment?"
+  }
+}

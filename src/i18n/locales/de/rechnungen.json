@@ -1,0 +1,46 @@
+{
+  "list": {
+    "title": "Rechnungen",
+    "description": "Ausgehende Rechnungen und Zahlungsstatus.",
+    "newInvoice": "Neue Rechnung"
+  },
+  "cols": {
+    "nummer": "Nummer",
+    "datum": "Datum",
+    "kunde": "Kunde",
+    "faellig": "Fällig",
+    "status": "Status",
+    "gesamt": "Gesamt",
+    "offen": "Offen"
+  },
+  "empty": {
+    "title": "Keine Rechnungen",
+    "description": "Erstelle deine erste Rechnung."
+  },
+  "form": {
+    "newTitle": "Neue Rechnung",
+    "editTitle": "Rechnung bearbeiten",
+    "nummer": "Nummer",
+    "datum": "Datum",
+    "faellig": "Fällig am",
+    "fromOrder": "Aus Bestellung (optional)",
+    "fromOrderHint": "Kunde, Fahrzeug und Betrag werden übernommen.",
+    "fromOrderPlaceholder": "Keine",
+    "vehicleOptional": "Fahrzeug (optional)",
+    "amount": "Betrag (€)",
+    "paid": "Bezahlt (€)"
+  },
+  "detail": {
+    "title": "Rechnung",
+    "invoiceDate": "Rechnungsdatum",
+    "faellig": "Fällig am",
+    "gesamt": "Gesamt",
+    "paid": "Bezahlt",
+    "openAmount": "Offener Betrag",
+    "note": "Notiz"
+  },
+  "delete": {
+    "title": "Rechnung löschen?",
+    "description": "„{nummer}“ wird dauerhaft entfernt."
+  }
+}

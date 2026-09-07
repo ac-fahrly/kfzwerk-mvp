@@ -1,0 +1,119 @@
+{
+  "brand": "KFZ Werk",
+  "app": {
+    "subtitle": "Workshop Management",
+    "version": "v0.1.0 · Prototype"
+  },
+  "nav": {
+    "dashboard": "Overview",
+    "bestellungen": "Orders",
+    "rechnungen": "Invoices",
+    "termine": "Appointments",
+    "mahnungen": "Reminders",
+    "teile": "Parts Catalog"
+  },
+  "actions": {
+    "save": "Save",
+    "create": "Create",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search…",
+    "close": "Close",
+    "remove": "Remove",
+    "today": "Today"
+  },
+  "theme": {
+    "toggle": "Toggle theme"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "status": {
+    "neu": "New",
+    "in_arbeit": "In progress",
+    "wartet_auf_teile": "Waiting for parts",
+    "fertig": "Ready",
+    "abgeholt": "Picked up",
+    "storniert": "Cancelled",
+    "entwurf": "Draft",
+    "offen": "Open",
+    "teilbezahlt": "Partly paid",
+    "bezahlt": "Paid",
+    "ueberfaellig": "Overdue",
+    "geplant": "Scheduled",
+    "bestaetigt": "Confirmed",
+    "abgeschlossen": "Completed",
+    "abgesagt": "Cancelled",
+    "stufe_1": "Payment reminder",
+    "stufe_2": "Dunning 1",
+    "stufe_3": "Dunning 2",
+    "inkasso": "Collections",
+    "erledigt": "Resolved"
+  },
+  "kategorie": {
+    "Motor": "Engine",
+    "Bremse": "Brakes",
+    "Fahrwerk": "Chassis",
+    "Elektrik": "Electrical",
+    "Karosserie": "Body",
+    "Betriebsstoffe": "Fluids",
+    "Zubehör": "Accessories"
+  },
+  "grund": {
+    "Inspektion": "Inspection",
+    "Reifenwechsel": "Tire change",
+    "HU / AU": "MOT / emissions",
+    "Bremsen": "Brakes",
+    "Klimaservice": "A/C service",
+    "Ölwechsel": "Oil change",
+    "Diagnose": "Diagnostics",
+    "Karosseriearbeit": "Body work",
+    "Sonstiges": "Other"
+  },
+  "einheit": {
+    "Stk": "pcs",
+    "Satz": "set",
+    "Paar": "pair",
+    "kanne": "jug",
+    "Flasche": "bottle",
+    "Pauschal": "flat",
+    "l": "l",
+    "h": "h"
+  },
+  "filters": {
+    "allStatus": "All statuses",
+    "allLevels": "All levels"
+  },
+  "form": {
+    "kunde": "Customer",
+    "fahrzeug": "Vehicle",
+    "chooseCustomer": "Choose customer",
+    "chooseVehicle": "Choose vehicle",
+    "chooseCustomerFirst": "Choose customer first",
+    "date": "Date",
+    "from": "From",
+    "to": "To",
+    "status": "Status",
+    "note": "Note",
+    "netto": "Net",
+    "mwst": "VAT 19 %",
+    "brutto": "Gross"
+  },
+  "errors": {
+    "required": "Required",
+    "customerRequired": "Customer required",
+    "vehicleRequired": "Vehicle required",
+    "descriptionRequired": "Description required",
+    "artikelnrRequired": "Article no. required",
+    "bezeichnungRequired": "Name required",
+    "lieferantRequired": "Supplier required",
+    "rechnungRequired": "Invoice required",
+    "positionRequired": "At least one position",
+    "invalidTime": "Format HH:MM",
+    "endBeforeStart": "End must be after start",
+    "tooSmall": "Too small",
+    "invalidFormat": "Invalid format"
+  }
+}

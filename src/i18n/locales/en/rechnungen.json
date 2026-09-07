@@ -1,0 +1,46 @@
+{
+  "list": {
+    "title": "Invoices",
+    "description": "Outgoing invoices and payment status.",
+    "newInvoice": "New invoice"
+  },
+  "cols": {
+    "nummer": "Number",
+    "datum": "Date",
+    "kunde": "Customer",
+    "faellig": "Due",
+    "status": "Status",
+    "gesamt": "Total",
+    "offen": "Open"
+  },
+  "empty": {
+    "title": "No invoices",
+    "description": "Create your first invoice."
+  },
+  "form": {
+    "newTitle": "New invoice",
+    "editTitle": "Edit invoice",
+    "nummer": "Number",
+    "datum": "Date",
+    "faellig": "Due on",
+    "fromOrder": "From order (optional)",
+    "fromOrderHint": "Customer, vehicle and amount are carried over.",
+    "fromOrderPlaceholder": "None",
+    "vehicleOptional": "Vehicle (optional)",
+    "amount": "Amount (€)",
+    "paid": "Paid (€)"
+  },
+  "detail": {
+    "title": "Invoice",
+    "invoiceDate": "Invoice date",
+    "faellig": "Due on",
+    "gesamt": "Total",
+    "paid": "Paid",
+    "openAmount": "Open amount",
+    "note": "Note"
+  },
+  "delete": {
+    "title": "Delete invoice?",
+    "description": "\"{nummer}\" will be permanently removed."
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "list": {
+    "title": "Termine",
+    "description": "Werkstatt-Termine, Kalender und Liste.",
+    "newAppointment": "Neuer Termin",
+    "calendarTab": "Kalender",
+    "listTab": "Liste"
+  },
+  "cols": {
+    "datum": "Datum",
+    "zeit": "Zeit",
+    "kunde": "Kunde",
+    "fahrzeug": "Fahrzeug",
+    "grund": "Grund",
+    "techniker": "Techniker",
+    "status": "Status"
+  },
+  "empty": {
+    "title": "Keine Termine",
+    "description": "Lege deinen ersten Termin an."
+  },
+  "form": {
+    "newTitle": "Neuer Termin",
+    "editTitle": "Termin bearbeiten",
+    "servicegrund": "Servicegrund",
+    "techniker": "Techniker"
+  },
+  "calendar": {
+    "prevMonth": "Vorheriger Monat",
+    "nextMonth": "Nächster Monat",
+    "andMore": "+{n} weitere",
+    "addAppointment": "Termin hinzufügen"
+  },
+  "detail": {
+    "title": "Termin",
+    "grund": "Grund",
+    "techniker": "Techniker"
+  },
+  "delete": {
+    "title": "Termin löschen?"
+  }
+}

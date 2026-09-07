@@ -1,0 +1,41 @@
+{
+  "list": {
+    "title": "Teile Katalog",
+    "description": "Ersatzteile, Verbrauchsmaterial und Zubehör.",
+    "newPart": "Neues Teil"
+  },
+  "cols": {
+    "artikelnr": "Artikelnr.",
+    "bezeichnung": "Bezeichnung",
+    "kategorie": "Kategorie",
+    "lieferant": "Lieferant",
+    "bestand": "Bestand",
+    "ek": "EK",
+    "vk": "VK"
+  },
+  "empty": {
+    "title": "Keine Teile gefunden",
+    "description": "Passe die Suche an oder lege ein neues Teil an."
+  },
+  "form": {
+    "newTitle": "Neues Teil anlegen",
+    "editTitle": "Teil bearbeiten",
+    "artikelnr": "Artikelnr.",
+    "artikelnrPlaceholder": "z. B. BR-2001",
+    "bezeichnung": "Bezeichnung",
+    "kategorie": "Kategorie",
+    "einheit": "Einheit",
+    "bestand": "Bestand",
+    "mindestbestand": "Mindestbestand",
+    "ekPrice": "EK-Preis (€)",
+    "vkPrice": "VK-Preis (€)",
+    "lieferant": "Lieferant",
+    "lagerort": "Lagerort",
+    "lagerortPlaceholder": "z. B. A-1-3",
+    "bezeichnungPlaceholder": "Bremsbeläge vorne (Satz)"
+  },
+  "delete": {
+    "title": "Teil löschen?",
+    "description": "„{name}“ wird dauerhaft entfernt."
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Übersicht",
+  "description": "Werkstatt-Verwaltung — Prototype",
+  "kpi": {
+    "openInvoices": "Offene Rechnungen",
+    "invoicesCount": "{count} Rechnungen",
+    "activeOrders": "Aktive Bestellungen",
+    "appointmentsTotal": "Termine (gesamt)",
+    "partsInCatalog": "Teile im Katalog"
+  }
+}

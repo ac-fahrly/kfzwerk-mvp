@@ -1,0 +1,46 @@
+{
+  "list": {
+    "title": "Bestellungen",
+    "description": "Kundenaufträge und deren Positionen.",
+    "newOrder": "Neue Bestellung"
+  },
+  "cols": {
+    "nummer": "Nummer",
+    "eingang": "Eingang",
+    "kunde": "Kunde",
+    "fahrzeug": "Fahrzeug",
+    "status": "Status",
+    "brutto": "Brutto"
+  },
+  "empty": {
+    "title": "Keine Bestellungen",
+    "description": "Lege deinen ersten Kundenauftrag an."
+  },
+  "form": {
+    "newTitle": "Neue Bestellung",
+    "editTitle": "Bestellung bearbeiten",
+    "nummer": "Nummer",
+    "eingang": "Eingang",
+    "beschreibung": "Beschreibung",
+    "positionen": "Positionen",
+    "addPart": "+ Teil aus Katalog",
+    "addWork": "Arbeit",
+    "kindArbeit": "Arbeit",
+    "kindTeil": "Teil",
+    "art": "Art",
+    "bezeichnung": "Bezeichnung",
+    "menge": "Menge",
+    "einheit": "Einheit",
+    "einzelpreis": "Einzelpreis",
+    "summe": "Summe"
+  },
+  "detail": {
+    "title": "Bestellung",
+    "eingang": "Eingang",
+    "fertigstellung": "Fertigstellung"
+  },
+  "delete": {
+    "title": "Bestellung löschen?",
+    "description": "„{nummer}“ wird dauerhaft entfernt."
+  }
+}

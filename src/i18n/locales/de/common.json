@@ -1,0 +1,119 @@
+{
+  "brand": "KFZ Werk",
+  "app": {
+    "subtitle": "Werkstatt-Verwaltung",
+    "version": "v0.1.0 · Prototype"
+  },
+  "nav": {
+    "dashboard": "Übersicht",
+    "bestellungen": "Bestellungen",
+    "rechnungen": "Rechnungen",
+    "termine": "Termine",
+    "mahnungen": "Mahnungen",
+    "teile": "Teile Katalog"
+  },
+  "actions": {
+    "save": "Speichern",
+    "create": "Anlegen",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "view": "Ansehen",
+    "search": "Suchen…",
+    "close": "Schließen",
+    "remove": "Entfernen",
+    "today": "Heute"
+  },
+  "theme": {
+    "toggle": "Theme umschalten"
+  },
+  "language": {
+    "label": "Sprache"
+  },
+  "status": {
+    "neu": "Neu",
+    "in_arbeit": "In Arbeit",
+    "wartet_auf_teile": "Wartet auf Teile",
+    "fertig": "Fertig",
+    "abgeholt": "Abgeholt",
+    "storniert": "Storniert",
+    "entwurf": "Entwurf",
+    "offen": "Offen",
+    "teilbezahlt": "Teilbezahlt",
+    "bezahlt": "Bezahlt",
+    "ueberfaellig": "Überfällig",
+    "geplant": "Geplant",
+    "bestaetigt": "Bestätigt",
+    "abgeschlossen": "Abgeschlossen",
+    "abgesagt": "Abgesagt",
+    "stufe_1": "Zahlungserinnerung",
+    "stufe_2": "Mahnung 1",
+    "stufe_3": "Mahnung 2",
+    "inkasso": "Inkasso",
+    "erledigt": "Erledigt"
+  },
+  "kategorie": {
+    "Motor": "Motor",
+    "Bremse": "Bremse",
+    "Fahrwerk": "Fahrwerk",
+    "Elektrik": "Elektrik",
+    "Karosserie": "Karosserie",
+    "Betriebsstoffe": "Betriebsstoffe",
+    "Zubehör": "Zubehör"
+  },
+  "grund": {
+    "Inspektion": "Inspektion",
+    "Reifenwechsel": "Reifenwechsel",
+    "HU / AU": "HU / AU",
+    "Bremsen": "Bremsen",
+    "Klimaservice": "Klimaservice",
+    "Ölwechsel": "Ölwechsel",
+    "Diagnose": "Diagnose",
+    "Karosseriearbeit": "Karosseriearbeit",
+    "Sonstiges": "Sonstiges"
+  },
+  "einheit": {
+    "Stk": "Stk",
+    "Satz": "Satz",
+    "Paar": "Paar",
+    "kanne": "Kanne",
+    "Flasche": "Flasche",
+    "Pauschal": "Pauschal",
+    "l": "l",
+    "h": "h"
+  },
+  "filters": {
+    "allStatus": "Alle Status",
+    "allLevels": "Alle Stufen"
+  },
+  "form": {
+    "kunde": "Kunde",
+    "fahrzeug": "Fahrzeug",
+    "chooseCustomer": "Kunde wählen",
+    "chooseVehicle": "Fahrzeug wählen",
+    "chooseCustomerFirst": "Erst Kunde wählen",
+    "date": "Datum",
+    "from": "Von",
+    "to": "Bis",
+    "status": "Status",
+    "note": "Notiz",
+    "netto": "Netto",
+    "mwst": "MwSt. 19 %",
+    "brutto": "Brutto"
+  },
+  "errors": {
+    "required": "Pflichtfeld",
+    "customerRequired": "Kunde erforderlich",
+    "vehicleRequired": "Fahrzeug erforderlich",
+    "descriptionRequired": "Beschreibung erforderlich",
+    "artikelnrRequired": "Artikelnr. erforderlich",
+    "bezeichnungRequired": "Bezeichnung erforderlich",
+    "lieferantRequired": "Lieferant erforderlich",
+    "rechnungRequired": "Rechnung erforderlich",
+    "positionRequired": "Mindestens eine Position",
+    "invalidTime": "Format HH:MM",
+    "endBeforeStart": "Ende muss nach Beginn liegen",
+    "tooSmall": "Zu klein",
+    "invalidFormat": "Ungültiges Format"
+  }
+}

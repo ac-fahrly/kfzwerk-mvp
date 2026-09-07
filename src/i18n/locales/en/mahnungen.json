@@ -1,0 +1,52 @@
+{
+  "list": {
+    "title": "Payment reminders",
+    "description": "Overdue invoices and dunning levels.",
+    "newMahnung": "New reminder"
+  },
+  "cols": {
+    "nummer": "Number",
+    "datum": "Date",
+    "kunde": "Customer",
+    "rechnung": "Invoice",
+    "stufe": "Level",
+    "faellig": "Due",
+    "offen": "Open",
+    "gebuehr": "Fee"
+  },
+  "empty": {
+    "title": "No reminders",
+    "description": "No open reminders at the moment."
+  },
+  "kandidaten": {
+    "singular": "{count} overdue invoice without reminder",
+    "plural": "{count} overdue invoices without reminder",
+    "andMore": "+{n} more"
+  },
+  "form": {
+    "newTitle": "New reminder",
+    "editTitle": "Edit reminder",
+    "nummer": "Number",
+    "datum": "Date",
+    "faellig": "Due on",
+    "rechnung": "Invoice",
+    "chooseInvoice": "Choose invoice",
+    "mahnstufe": "Dunning level",
+    "offenerBetrag": "Open amount (€)",
+    "mahngebuehr": "Fee (€)",
+    "openLabel": "open"
+  },
+  "detail": {
+    "title": "Reminder",
+    "datum": "Date",
+    "faellig": "Due on",
+    "openAmount": "Open amount",
+    "fee": "Fee",
+    "total": "Total",
+    "invoiceRef": "Invoice",
+    "note": "Note"
+  },
+  "delete": {
+    "title": "Delete reminder?"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "list": {
+    "title": "Mahnungen",
+    "description": "Überfällige Rechnungen und Mahnstufen.",
+    "newMahnung": "Neue Mahnung"
+  },
+  "cols": {
+    "nummer": "Nummer",
+    "datum": "Datum",
+    "kunde": "Kunde",
+    "rechnung": "Rechnung",
+    "stufe": "Stufe",
+    "faellig": "Fällig",
+    "offen": "Offen",
+    "gebuehr": "Gebühr"
+  },
+  "empty": {
+    "title": "Keine Mahnungen",
+    "description": "Aktuell sind keine Mahnungen offen."
+  },
+  "kandidaten": {
+    "singular": "{count} überfällige Rechnung ohne Mahnung",
+    "plural": "{count} überfällige Rechnungen ohne Mahnung",
+    "andMore": "+{n} weitere"
+  },
+  "form": {
+    "newTitle": "Neue Mahnung",
+    "editTitle": "Mahnung bearbeiten",
+    "nummer": "Nummer",
+    "datum": "Datum",
+    "faellig": "Fällig am",
+    "rechnung": "Rechnung",
+    "chooseInvoice": "Rechnung wählen",
+    "mahnstufe": "Mahnstufe",
+    "offenerBetrag": "Offener Betrag (€)",
+    "mahngebuehr": "Mahngebühr (€)",
+    "openLabel": "offen"
+  },
+  "detail": {
+    "title": "Mahnung",
+    "datum": "Datum",
+    "faellig": "Fällig am",
+    "openAmount": "Offener Betrag",
+    "fee": "Mahngebühr",
+    "total": "Gesamt",
+    "invoiceRef": "Rechnung",
+    "note": "Notiz"
+  },
+  "delete": {
+    "title": "Mahnung löschen?"
+  }
+}

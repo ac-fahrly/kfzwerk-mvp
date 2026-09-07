@@ -1,0 +1,41 @@
+{
+  "list": {
+    "title": "Parts Catalog",
+    "description": "Spare parts, consumables and accessories.",
+    "newPart": "New part"
+  },
+  "cols": {
+    "artikelnr": "Art. no.",
+    "bezeichnung": "Name",
+    "kategorie": "Category",
+    "lieferant": "Supplier",
+    "bestand": "Stock",
+    "ek": "Cost",
+    "vk": "Price"
+  },
+  "empty": {
+    "title": "No parts found",
+    "description": "Refine the search or add a new part."
+  },
+  "form": {
+    "newTitle": "Add new part",
+    "editTitle": "Edit part",
+    "artikelnr": "Article no.",
+    "artikelnrPlaceholder": "e.g. BR-2001",
+    "bezeichnung": "Name",
+    "kategorie": "Category",
+    "einheit": "Unit",
+    "bestand": "Stock",
+    "mindestbestand": "Min. stock",
+    "ekPrice": "Cost price (€)",
+    "vkPrice": "Sales price (€)",
+    "lieferant": "Supplier",
+    "lagerort": "Storage",
+    "lagerortPlaceholder": "e.g. A-1-3",
+    "bezeichnungPlaceholder": "Front brake pads (set)"
+  },
+  "delete": {
+    "title": "Delete part?",
+    "description": "\"{name}\" will be permanently removed."
+  }
+}
