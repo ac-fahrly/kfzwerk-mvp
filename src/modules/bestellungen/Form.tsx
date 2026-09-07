@@ -42,6 +42,7 @@ export function BestellungForm({ initial, onSubmit, onCancel }: Props) {
     setValue,
     formState: { errors },
   } = useForm<BestellungInput>({
+    mode: 'onBlur',
     resolver: zodResolver(bestellungSchema),
     defaultValues:
       initial ??
@@ -106,7 +107,7 @@ export function BestellungForm({ initial, onSubmit, onCancel }: Props) {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <FormField label={tc('form.kunde')} error={errors.customerId?.message}>
+        <FormField label={tc('form.kunde')} required error={errors.customerId?.message}>
           <Controller
             control={control}
             name="customerId"
@@ -130,7 +131,7 @@ export function BestellungForm({ initial, onSubmit, onCancel }: Props) {
             )}
           />
         </FormField>
-        <FormField label={tc('form.fahrzeug')} error={errors.vehicleId?.message}>
+        <FormField label={tc('form.fahrzeug')} required error={errors.vehicleId?.message}>
           <Controller
             control={control}
             name="vehicleId"
@@ -152,7 +153,7 @@ export function BestellungForm({ initial, onSubmit, onCancel }: Props) {
         </FormField>
       </div>
 
-      <FormField label={t('form.beschreibung')} error={errors.beschreibung?.message}>
+      <FormField label={t('form.beschreibung')} required error={errors.beschreibung?.message}>
         <Textarea rows={2} {...register('beschreibung')} />
       </FormField>
 

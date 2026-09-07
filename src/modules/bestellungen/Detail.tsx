@@ -1,12 +1,14 @@
+import { Pencil } from 'lucide-react';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { Money } from '@/components/shared/money';
 import { DateCell } from '@/components/shared/date-cell';
+import { Button } from '@/components/ui/button';
 import { formatNumber } from '@/lib/format';
 import { useT } from '@/i18n';
 import { customerById, vehicleById } from '@/modules/shared/customers';
 import { berechneSumme, type Bestellung } from './types';
 
-export function BestellungDetail({ b }: { b: Bestellung }) {
+export function BestellungDetail({ b, onEdit }: { b: Bestellung; onEdit?: () => void }) {
   const { t } = useT('bestellungen');
   const { t: tc } = useT('common');
   const kunde = customerById(b.customerId);
@@ -19,7 +21,15 @@ export function BestellungDetail({ b }: { b: Bestellung }) {
           <div className="num text-xs text-muted-foreground">{b.nummer}</div>
           <div className="mt-1 text-lg font-semibold">{b.beschreibung}</div>
         </div>
-        <StatusBadge status={b.status} />
+        <div className="flex items-center gap-2">
+          <StatusBadge status={b.status} />
+          {onEdit ? (
+            <Button variant="outline" size="sm" onClick={onEdit}>
+              <Pencil size={14} />
+              {tc('actions.edit')}
+            </Button>
+          ) : null}
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4 rounded-md border p-4 text-sm">

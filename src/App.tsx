@@ -13,10 +13,15 @@ export default function App() {
       <Route element={<AppShell />}>
         <Route index element={<Dashboard />} />
         <Route path="bestellungen" element={<BestellungenList />} />
+        <Route path="bestellungen/:id" element={<BestellungenList />} />
         <Route path="rechnungen" element={<RechnungenList />} />
+        <Route path="rechnungen/:id" element={<RechnungenList />} />
         <Route path="termine" element={<TermineList />} />
+        <Route path="termine/:id" element={<TermineList />} />
         <Route path="mahnungen" element={<MahnungenList />} />
+        <Route path="mahnungen/:id" element={<MahnungenList />} />
         <Route path="teile" element={<TeileList />} />
+        <Route path="teile/:id" element={<TeileList />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

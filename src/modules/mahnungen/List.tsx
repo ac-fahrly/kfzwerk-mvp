@@ -1,7 +1,9 @@
-import { useMemo, useState } from 'react';
-import { Eye, Pencil, Plus, Receipt, Trash2 } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Pencil, Plus, Receipt, Trash2 } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
-import { DataTable, type Column } from '@/components/shared/data-table';
+import { DataTable, type Column, type Density } from '@/components/shared/data-table';
+import { TableToolbar } from '@/components/shared/table-toolbar';
 import { EmptyState } from '@/components/shared/empty-state';
 import { Money } from '@/components/shared/money';
 import { DateCell } from '@/components/shared/date-cell';
@@ -17,6 +19,8 @@ import {
 } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ConfirmDialog } from '@/components/shared/confirm';
+import { downloadCsv } from '@/lib/csv';
+import { usePageTitle } from '@/lib/use-page-title';
 import { useT } from '@/i18n';
 import { toast } from '@/store/toast-store';
 import { customerById } from '@/modules/shared/customers';
@@ -29,15 +33,31 @@ import { MahnungForm } from './Form';
 
 type Modal = { kind: 'create' } | { kind: 'edit'; item: Mahnung } | { kind: 'view'; item: Mahnung } | null;
 
+const BASE = '/mahnungen';
+
 export function MahnungenList() {
   const { t } = useT('mahnungen');
   const { t: tc } = useT('common');
+  usePageTitle(t('list.title'));
   const statusLabel = useStatusLabel();
   const { items, add, update, remove } = useMahnungen();
   const rechnungen = useRechnungen((s) => s.items);
+  const { id } = useParams<{ id?: string }>();
+  const navigate = useNavigate();
   const [q, setQ] = useState('');
   const [statusFilter, setStatusFilter] = useState('alle');
   const [modal, setModal] = useState<Modal>(null);
+  const [density, setDensity] = useState<Density>('comfortable');
+
+  useEffect(() => {
+    if (!id) {
+      if (modal?.kind === 'view') setModal(null);
+      return;
+    }
+    const item = items.find((x) => x.id === id);
+    if (item) setModal({ kind: 'view', item });
+    else navigate(BASE, { replace: true });
+  }, [id, items, navigate]);
 
   const kandidaten = useMemo(
     () => rechnungen.filter((r) => istUeberfaellig(r) && !items.some((m) => m.rechnungId === r.id && m.status !== 'erledigt')),
@@ -55,22 +75,27 @@ export function MahnungenList() {
     });
   }, [items, q, statusFilter]);
 
+  function closeViewRoute() {
+    setModal(null);
+    if (id) navigate(BASE);
+  }
+
   const columns: Column<Mahnung>[] = [
-    { key: 'nummer', header: t('cols.nummer'), sortValue: (r) => r.nummer, cell: (r) => <span className="num text-xs">{r.nummer}</span>, width: '130px' },
-    { key: 'datum', header: t('cols.datum'), align: 'right', sortValue: (r) => r.datum, cell: (r) => <DateCell value={r.datum} />, width: '110px' },
-    { key: 'kunde', header: t('cols.kunde'), sortValue: (r) => customerById(r.customerId)?.name ?? '', cell: (r) => <span className="font-medium">{customerById(r.customerId)?.name ?? '—'}</span> },
-    { key: 'rechnung', header: t('cols.rechnung'), sortValue: (r) => rechnungById(r.rechnungId)?.nummer ?? '', cell: (r) => <span className="num text-xs text-muted-foreground">{rechnungById(r.rechnungId)?.nummer ?? '—'}</span>, width: '140px' },
-    { key: 'status', header: t('cols.stufe'), sortValue: (r) => r.status, cell: (r) => <StatusBadge status={r.status} />, width: '190px' },
-    { key: 'faellig', header: t('cols.faellig'), align: 'right', sortValue: (r) => r.faelligDatum, cell: (r) => <DateCell value={r.faelligDatum} />, width: '110px' },
-    { key: 'offen', header: t('cols.offen'), align: 'right', sortValue: (r) => r.offenerBetrag, cell: (r) => <Money value={r.offenerBetrag} />, width: '120px' },
-    { key: 'gebuehr', header: t('cols.gebuehr'), align: 'right', sortValue: (r) => r.mahngebuehr, cell: (r) => <Money value={r.mahngebuehr} />, width: '110px' },
+    { key: 'nummer', header: t('cols.nummer'), sortValue: (r) => r.nummer, cell: (r) => <span className="num text-xs">{r.nummer}</span>, csvValue: (r) => r.nummer, width: '130px' },
+    { key: 'datum', header: t('cols.datum'), align: 'right', sortValue: (r) => r.datum, cell: (r) => <DateCell value={r.datum} />, csvValue: (r) => r.datum, width: '110px' },
+    { key: 'kunde', header: t('cols.kunde'), sortValue: (r) => customerById(r.customerId)?.name ?? '', cell: (r) => <span className="font-medium">{customerById(r.customerId)?.name ?? '—'}</span>, csvValue: (r) => customerById(r.customerId)?.name ?? '' },
+    { key: 'rechnung', header: t('cols.rechnung'), sortValue: (r) => rechnungById(r.rechnungId)?.nummer ?? '', cell: (r) => <span className="num text-xs text-muted-foreground">{rechnungById(r.rechnungId)?.nummer ?? '—'}</span>, csvValue: (r) => rechnungById(r.rechnungId)?.nummer ?? '', width: '140px' },
+    { key: 'status', header: t('cols.stufe'), sortValue: (r) => r.status, cell: (r) => <StatusBadge status={r.status} />, csvValue: (r) => statusLabel(r.status), width: '190px' },
+    { key: 'faellig', header: t('cols.faellig'), align: 'right', sortValue: (r) => r.faelligDatum, cell: (r) => <DateCell value={r.faelligDatum} />, csvValue: (r) => r.faelligDatum, width: '110px' },
+    { key: 'offen', header: t('cols.offen'), align: 'right', sortValue: (r) => r.offenerBetrag, cell: (r) => <Money value={r.offenerBetrag} />, csvValue: (r) => r.offenerBetrag.toFixed(2), width: '120px' },
+    { key: 'gebuehr', header: t('cols.gebuehr'), align: 'right', sortValue: (r) => r.mahngebuehr, cell: (r) => <Money value={r.mahngebuehr} />, csvValue: (r) => r.mahngebuehr.toFixed(2), width: '110px' },
     {
       key: 'actions',
       header: '',
       align: 'right',
+      hideUntilHover: true,
       cell: (r) => (
         <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
-          <Button variant="ghost" size="icon" onClick={() => setModal({ kind: 'view', item: r })} aria-label={tc('actions.view')}><Eye size={16} /></Button>
           <Button variant="ghost" size="icon" onClick={() => setModal({ kind: 'edit', item: r })} aria-label={tc('actions.edit')}><Pencil size={16} /></Button>
           <ConfirmDialog
             trigger={<Button variant="ghost" size="icon" aria-label={tc('actions.delete')}><Trash2 size={16} /></Button>}
@@ -79,7 +104,7 @@ export function MahnungenList() {
           />
         </div>
       ),
-      width: '130px',
+      width: '96px',
     },
   ];
 
@@ -128,11 +153,18 @@ export function MahnungenList() {
         </Card>
       ) : null}
 
+      <TableToolbar
+        density={density}
+        onDensityChange={setDensity}
+        onExport={() => downloadCsv(`mahnungen-${new Date().toISOString().slice(0, 10)}`, columns, filtered)}
+      />
+
       <DataTable
         columns={columns}
         rows={filtered}
         getRowId={(r) => r.id}
-        onRowClick={(r) => setModal({ kind: 'view', item: r })}
+        density={density}
+        onRowClick={(r) => navigate(`${BASE}/${r.id}`)}
         emptyState={
           items.length === 0 ? (
             <EmptyState
@@ -172,29 +204,41 @@ export function MahnungenList() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={modal?.kind === 'view'} onOpenChange={(o) => !o && setModal(null)}>
+      <Dialog open={modal?.kind === 'view'} onOpenChange={(o) => { if (!o) closeViewRoute(); }}>
         <DialogContent className="max-w-lg">
           <DialogHeader><DialogTitle>{t('detail.title')}</DialogTitle></DialogHeader>
-          {modal?.kind === 'view' ? <MahnungView m={modal.item} /> : null}
+          {modal?.kind === 'view' ? (
+            <MahnungView
+              m={modal.item}
+              onEdit={() => { const item = modal.item; setModal({ kind: 'edit', item }); if (id) navigate(BASE); }}
+            />
+          ) : null}
         </DialogContent>
       </Dialog>
     </div>
   );
 }
 
-function MahnungView({ m }: { m: Mahnung }) {
+function MahnungView({ m, onEdit }: { m: Mahnung; onEdit: () => void }) {
   const { t } = useT('mahnungen');
+  const { t: tc } = useT('common');
   const kunde = customerById(m.customerId);
   const r = rechnungById(m.rechnungId);
   return (
     <div className="space-y-3 text-sm">
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-2">
         <div>
           <div className="num text-xs text-muted-foreground">{m.nummer}</div>
           <div className="mt-1 text-lg font-semibold">{kunde?.name ?? '—'}</div>
           <div className="num text-xs text-muted-foreground">{t('detail.invoiceRef')} {r?.nummer ?? '—'}</div>
         </div>
-        <StatusBadge status={m.status} />
+        <div className="flex items-center gap-2">
+          <StatusBadge status={m.status} />
+          <Button variant="outline" size="sm" onClick={onEdit}>
+            <Pencil size={14} />
+            {tc('actions.edit')}
+          </Button>
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-3 rounded-md border p-3">
         <div>

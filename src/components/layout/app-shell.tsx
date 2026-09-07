@@ -2,8 +2,11 @@ import { Outlet } from 'react-router-dom';
 import { MobileNav, Sidebar } from './sidebar';
 import { Topbar } from './topbar';
 import { Toaster } from '@/components/shared/toaster';
+import { CommandPalette } from '@/components/shared/command-palette';
+import { useGlobalShortcuts } from '@/lib/use-shortcuts';
 
 export function AppShell() {
+  useGlobalShortcuts();
   return (
     <div className="flex h-full min-h-screen">
       <Sidebar />
@@ -16,6 +19,7 @@ export function AppShell() {
           </div>
         </main>
       </div>
+      <CommandPalette />
       <Toaster />
     </div>
   );

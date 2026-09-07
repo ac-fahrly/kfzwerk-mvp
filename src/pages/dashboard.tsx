@@ -10,6 +10,7 @@ import { useMahnungen } from '@/modules/mahnungen/store';
 import { useTeile } from '@/modules/teile/store';
 import { formatCompact } from '@/lib/format';
 import { useT } from '@/i18n';
+import { usePageTitle } from '@/lib/use-page-title';
 import { istUeberfaellig, offenerBetrag } from '@/modules/rechnungen/types';
 
 const tiles = [
@@ -23,6 +24,7 @@ const tiles = [
 export function Dashboard() {
   const { t } = useT('dashboard');
   const { t: tc } = useT('common');
+  usePageTitle(t('title'));
   const bestellungen = useBestellungen((s) => s.items);
   const rechnungen = useRechnungen((s) => s.items);
   const termine = useTermine((s) => s.items);

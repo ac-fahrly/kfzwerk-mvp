@@ -32,6 +32,7 @@ export function TerminForm({ initial, onSubmit, onCancel, defaultDate }: Props) 
     setValue,
     formState: { errors },
   } = useForm<TerminInput>({
+    mode: 'onBlur',
     resolver: zodResolver(terminSchema),
     defaultValues:
       initial ??
@@ -70,7 +71,7 @@ export function TerminForm({ initial, onSubmit, onCancel, defaultDate }: Props) 
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <FormField label={tc('form.kunde')} error={errors.customerId?.message}>
+        <FormField label={tc('form.kunde')} required error={errors.customerId?.message}>
           <Controller
             control={control}
             name="customerId"
@@ -91,7 +92,7 @@ export function TerminForm({ initial, onSubmit, onCancel, defaultDate }: Props) 
             )}
           />
         </FormField>
-        <FormField label={tc('form.fahrzeug')} error={errors.vehicleId?.message}>
+        <FormField label={tc('form.fahrzeug')} required error={errors.vehicleId?.message}>
           <Controller
             control={control}
             name="vehicleId"

@@ -11,7 +11,8 @@
     "faellig": "Due",
     "status": "Status",
     "gesamt": "Total",
-    "offen": "Open"
+    "offen": "Open",
+    "overdueDays": "{n} days overdue"
   },
   "empty": {
     "title": "No invoices",
@@ -37,7 +38,10 @@
     "gesamt": "Total",
     "paid": "Paid",
     "openAmount": "Open amount",
-    "note": "Note"
+    "note": "Note",
+    "print": "Print",
+    "invoiceTo": "Bill to",
+    "billingAddress": "Billing address"
   },
   "delete": {
     "title": "Delete invoice?",

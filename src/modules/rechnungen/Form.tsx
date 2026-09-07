@@ -38,6 +38,7 @@ export function RechnungForm({ initial, onSubmit, onCancel }: Props) {
     setValue,
     formState: { errors },
   } = useForm<RechnungInput>({
+    mode: 'onBlur',
     resolver: zodResolver(rechnungSchema),
     defaultValues:
       initial ??
@@ -100,7 +101,7 @@ export function RechnungForm({ initial, onSubmit, onCancel }: Props) {
       </FormField>
 
       <div className="grid grid-cols-2 gap-4">
-        <FormField label={tc('form.kunde')} error={errors.customerId?.message}>
+        <FormField label={tc('form.kunde')} required error={errors.customerId?.message}>
           <Controller
             control={control}
             name="customerId"

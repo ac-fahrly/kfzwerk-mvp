@@ -1,7 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Package, Pencil, Plus, Trash2 } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
-import { DataTable, type Column } from '@/components/shared/data-table';
+import { DataTable, type Column, type Density } from '@/components/shared/data-table';
+import { TableToolbar } from '@/components/shared/table-toolbar';
 import { EmptyState } from '@/components/shared/empty-state';
 import { Money } from '@/components/shared/money';
 import { Button } from '@/components/ui/button';
@@ -15,19 +17,37 @@ import {
 } from '@/components/ui/dialog';
 import { ConfirmDialog } from '@/components/shared/confirm';
 import { formatNumber } from '@/lib/format';
+import { downloadCsv } from '@/lib/csv';
+import { usePageTitle } from '@/lib/use-page-title';
 import { useT } from '@/i18n';
 import { toast } from '@/store/toast-store';
 import { useTeile } from './store';
 import type { Teil } from './types';
 import { TeilForm } from './Form';
 
+const BASE = '/teile';
+
 export function TeileList() {
   const { t } = useT('teile');
   const { t: tc } = useT('common');
+  usePageTitle(t('list.title'));
   const { items, add, update, remove } = useTeile();
+  const { id } = useParams<{ id?: string }>();
+  const navigate = useNavigate();
   const [q, setQ] = useState('');
   const [editing, setEditing] = useState<Teil | null>(null);
   const [creating, setCreating] = useState(false);
+  const [density, setDensity] = useState<Density>('comfortable');
+
+  useEffect(() => {
+    if (!id) {
+      setEditing(null);
+      return;
+    }
+    const item = items.find((x) => x.id === id);
+    if (item) setEditing(item);
+    else navigate(BASE, { replace: true });
+  }, [id, items, navigate]);
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -42,10 +62,10 @@ export function TeileList() {
   }, [items, q]);
 
   const columns: Column<Teil>[] = [
-    { key: 'artikelnr', header: t('cols.artikelnr'), sortValue: (r) => r.artikelnr, cell: (r) => <span className="num text-xs">{r.artikelnr}</span>, width: '120px' },
-    { key: 'bezeichnung', header: t('cols.bezeichnung'), sortValue: (r) => r.bezeichnung, cell: (r) => <span className="font-medium">{r.bezeichnung}</span> },
-    { key: 'kategorie', header: t('cols.kategorie'), sortValue: (r) => r.kategorie, cell: (r) => <Badge variant="secondary">{tc(`kategorie.${r.kategorie}`)}</Badge>, width: '140px' },
-    { key: 'lieferant', header: t('cols.lieferant'), sortValue: (r) => r.lieferant, cell: (r) => <span className="text-muted-foreground">{r.lieferant}</span>, width: '140px' },
+    { key: 'artikelnr', header: t('cols.artikelnr'), sortValue: (r) => r.artikelnr, cell: (r) => <span className="num text-xs">{r.artikelnr}</span>, csvValue: (r) => r.artikelnr, width: '120px' },
+    { key: 'bezeichnung', header: t('cols.bezeichnung'), sortValue: (r) => r.bezeichnung, cell: (r) => <span className="font-medium">{r.bezeichnung}</span>, csvValue: (r) => r.bezeichnung },
+    { key: 'kategorie', header: t('cols.kategorie'), sortValue: (r) => r.kategorie, cell: (r) => <Badge variant="secondary">{tc(`kategorie.${r.kategorie}`)}</Badge>, csvValue: (r) => r.kategorie, width: '140px' },
+    { key: 'lieferant', header: t('cols.lieferant'), sortValue: (r) => r.lieferant, cell: (r) => <span className="text-muted-foreground">{r.lieferant}</span>, csvValue: (r) => r.lieferant, width: '140px' },
     {
       key: 'bestand',
       header: t('cols.bestand'),
@@ -56,17 +76,19 @@ export function TeileList() {
           {formatNumber(r.bestand)} {tc(`einheit.${r.einheit}`)}
         </span>
       ),
+      csvValue: (r) => r.bestand,
       width: '130px',
     },
-    { key: 'ekPreis', header: t('cols.ek'), align: 'right', sortValue: (r) => r.ekPreis, cell: (r) => <Money value={r.ekPreis} />, width: '110px' },
-    { key: 'vkPreis', header: t('cols.vk'), align: 'right', sortValue: (r) => r.vkPreis, cell: (r) => <Money value={r.vkPreis} />, width: '110px' },
+    { key: 'ekPreis', header: t('cols.ek'), align: 'right', sortValue: (r) => r.ekPreis, cell: (r) => <Money value={r.ekPreis} />, csvValue: (r) => r.ekPreis.toFixed(2), width: '110px' },
+    { key: 'vkPreis', header: t('cols.vk'), align: 'right', sortValue: (r) => r.vkPreis, cell: (r) => <Money value={r.vkPreis} />, csvValue: (r) => r.vkPreis.toFixed(2), width: '110px' },
     {
       key: 'actions',
       header: '',
       align: 'right',
+      hideUntilHover: true,
       cell: (r) => (
         <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
-          <Button variant="ghost" size="icon" onClick={() => setEditing(r)} aria-label={tc('actions.edit')}>
+          <Button variant="ghost" size="icon" onClick={() => navigate(`${BASE}/${r.id}`)} aria-label={tc('actions.edit')}>
             <Pencil size={16} />
           </Button>
           <ConfirmDialog
@@ -106,11 +128,18 @@ export function TeileList() {
         }
       />
 
+      <TableToolbar
+        density={density}
+        onDensityChange={setDensity}
+        onExport={() => downloadCsv(`teile-${new Date().toISOString().slice(0, 10)}`, columns, filtered)}
+      />
+
       <DataTable
         columns={columns}
         rows={filtered}
         getRowId={(r) => r.id}
-        onRowClick={(r) => setEditing(r)}
+        density={density}
+        onRowClick={(r) => navigate(`${BASE}/${r.id}`)}
         emptyState={
           items.length === 0 ? (
             <EmptyState
@@ -142,7 +171,7 @@ export function TeileList() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
+      <Dialog open={!!editing} onOpenChange={(o) => { if (!o) { setEditing(null); if (id) navigate(BASE); } }}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>{t('form.editTitle')}</DialogTitle>
@@ -150,8 +179,8 @@ export function TeileList() {
           {editing ? (
             <TeilForm
               initial={editing}
-              onSubmit={(x) => { update(editing.id, x); toast.success(tc('toasts.saved')); setEditing(null); }}
-              onCancel={() => setEditing(null)}
+              onSubmit={(x) => { update(editing.id, x); toast.success(tc('toasts.saved')); setEditing(null); if (id) navigate(BASE); }}
+              onCancel={() => { setEditing(null); if (id) navigate(BASE); }}
             />
           ) : null}
         </DialogContent>

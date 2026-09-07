@@ -35,6 +35,18 @@
     "saved": "Saved",
     "deleted": "Deleted"
   },
+  "command": {
+    "placeholder": "Search or jump to…",
+    "empty": "No results",
+    "sections": {
+      "pages": "Pages",
+      "customers": "Customers",
+      "orders": "Orders",
+      "invoices": "Invoices",
+      "appointments": "Appointments",
+      "parts": "Parts"
+    }
+  },
   "empty": {
     "noMatches": "No matches",
     "noMatchesDescription": "Adjust the search or filters."

@@ -42,6 +42,7 @@ export function MahnungForm({ initial, onSubmit, onCancel }: Props) {
     setValue,
     formState: { errors },
   } = useForm<MahnungInput>({
+    mode: 'onBlur',
     resolver: zodResolver(mahnungSchema),
     defaultValues:
       initial ??
@@ -97,7 +98,7 @@ export function MahnungForm({ initial, onSubmit, onCancel }: Props) {
         </FormField>
       </div>
 
-      <FormField label={t('form.rechnung')} error={errors.rechnungId?.message}>
+      <FormField label={t('form.rechnung')} required error={errors.rechnungId?.message}>
         <Controller
           control={control}
           name="rechnungId"

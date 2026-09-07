@@ -11,7 +11,8 @@
     "faellig": "Fällig",
     "status": "Status",
     "gesamt": "Gesamt",
-    "offen": "Offen"
+    "offen": "Offen",
+    "overdueDays": "{n} Tage überfällig"
   },
   "empty": {
     "title": "Keine Rechnungen",
@@ -37,7 +38,10 @@
     "gesamt": "Gesamt",
     "paid": "Bezahlt",
     "openAmount": "Offener Betrag",
-    "note": "Notiz"
+    "note": "Notiz",
+    "print": "Drucken",
+    "invoiceTo": "Rechnung an",
+    "billingAddress": "Rechnungsadresse"
   },
   "delete": {
     "title": "Rechnung löschen?",

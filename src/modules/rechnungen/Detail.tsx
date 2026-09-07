@@ -1,16 +1,19 @@
+import { Pencil, Printer } from 'lucide-react';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { Money } from '@/components/shared/money';
 import { DateCell } from '@/components/shared/date-cell';
+import { Button } from '@/components/ui/button';
 import { useT } from '@/i18n';
 import { customerById, vehicleById } from '@/modules/shared/customers';
 import { offenerBetrag, type Rechnung } from './types';
 
-export function RechnungDetail({ r }: { r: Rechnung }) {
+export function RechnungDetail({ r, onEdit }: { r: Rechnung; onEdit?: () => void }) {
   const { t } = useT('rechnungen');
+  const { t: tc } = useT('common');
   const kunde = customerById(r.customerId);
   const fahrzeug = r.vehicleId ? vehicleById(r.vehicleId) : undefined;
   return (
-    <div className="space-y-4">
+    <div className="print-area space-y-4">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="num text-xs text-muted-foreground">{r.nummer}</div>
@@ -21,8 +24,31 @@ export function RechnungDetail({ r }: { r: Rechnung }) {
             </div>
           ) : null}
         </div>
-        <StatusBadge status={r.status} />
+        <div className="no-print flex items-center gap-2">
+          <StatusBadge status={r.status} />
+          {onEdit ? (
+            <Button variant="outline" size="sm" onClick={onEdit}>
+              <Pencil size={14} />
+              {tc('actions.edit')}
+            </Button>
+          ) : null}
+          <Button variant="outline" size="sm" onClick={() => window.print()}>
+            <Printer size={14} />
+            {t('detail.print')}
+          </Button>
+        </div>
       </div>
+
+      {kunde ? (
+        <div className="hidden print:block">
+          <div className="text-xs uppercase tracking-wide text-muted-foreground">{t('detail.invoiceTo')}</div>
+          <div className="mt-1 text-sm">
+            <div>{kunde.name}</div>
+            <div>{kunde.strasse}</div>
+            <div>{kunde.plz} {kunde.ort}</div>
+          </div>
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-2 gap-4 rounded-md border p-4 text-sm">
         <div>

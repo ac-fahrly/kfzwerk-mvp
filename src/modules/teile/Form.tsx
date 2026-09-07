@@ -26,6 +26,7 @@ export function TeilForm({ initial, onSubmit, onCancel }: Props) {
     watch,
     formState: { errors },
   } = useForm<TeilInput>({
+    mode: 'onBlur',
     resolver: zodResolver(teilSchema),
     defaultValues: initial ?? {
       id: newId(),
@@ -47,7 +48,7 @@ export function TeilForm({ initial, onSubmit, onCancel }: Props) {
   return (
     <form onSubmit={handleSubmit((v) => onSubmit(v as Teil))} className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
-        <FormField label={t('form.artikelnr')} error={errors.artikelnr?.message}>
+        <FormField label={t('form.artikelnr')} required error={errors.artikelnr?.message}>
           <Input {...register('artikelnr')} placeholder={t('form.artikelnrPlaceholder')} />
         </FormField>
         <FormField label={t('form.kategorie')}>
@@ -65,7 +66,7 @@ export function TeilForm({ initial, onSubmit, onCancel }: Props) {
           </Select>
         </FormField>
       </div>
-      <FormField label={t('form.bezeichnung')} error={errors.bezeichnung?.message}>
+      <FormField label={t('form.bezeichnung')} required error={errors.bezeichnung?.message}>
         <Input {...register('bezeichnung')} placeholder={t('form.bezeichnungPlaceholder')} />
       </FormField>
       <div className="grid grid-cols-3 gap-4">
@@ -88,7 +89,7 @@ export function TeilForm({ initial, onSubmit, onCancel }: Props) {
         </FormField>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <FormField label={t('form.lieferant')} error={errors.lieferant?.message}>
+        <FormField label={t('form.lieferant')} required error={errors.lieferant?.message}>
           <Input {...register('lieferant')} />
         </FormField>
         <FormField label={t('form.lagerort')}>

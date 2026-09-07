@@ -35,6 +35,18 @@
     "saved": "Gespeichert",
     "deleted": "Gelöscht"
   },
+  "command": {
+    "placeholder": "Suchen oder springen…",
+    "empty": "Keine Ergebnisse",
+    "sections": {
+      "pages": "Seiten",
+      "customers": "Kunden",
+      "orders": "Bestellungen",
+      "invoices": "Rechnungen",
+      "appointments": "Termine",
+      "parts": "Teile"
+    }
+  },
   "empty": {
     "noMatches": "Keine Treffer",
     "noMatchesDescription": "Passe die Suche oder Filter an."

@@ -8,16 +8,20 @@ type Props = {
   htmlFor?: string;
   error?: string;
   hint?: string;
+  required?: boolean;
   className?: string;
   children: ReactNode;
 };
 
-export function FormField({ label, htmlFor, error, hint, className, children }: Props) {
+export function FormField({ label, htmlFor, error, hint, required, className, children }: Props) {
   const { t } = useT('common');
   const displayError = error && error.startsWith('errors.') ? t(error) : error;
   return (
     <div className={cn('space-y-1.5', className)}>
-      <Label htmlFor={htmlFor}>{label}</Label>
+      <Label htmlFor={htmlFor}>
+        {label}
+        {required ? <span className="ml-0.5 text-destructive">*</span> : null}
+      </Label>
       {children}
       {displayError ? (
         <p className="text-xs text-destructive">{displayError}</p>
