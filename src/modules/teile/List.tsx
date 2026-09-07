@@ -7,7 +7,6 @@ import { TableToolbar } from '@/components/shared/table-toolbar';
 import { EmptyState } from '@/components/shared/empty-state';
 import { Money } from '@/components/shared/money';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
@@ -21,6 +20,7 @@ import { downloadCsv } from '@/lib/csv';
 import { usePageTitle } from '@/lib/use-page-title';
 import { useT } from '@/i18n';
 import { toast } from '@/store/toast-store';
+import { useUiStore } from '@/store/ui-store';
 import { useTeile } from './store';
 import type { Teil } from './types';
 import { TeilForm } from './Form';
@@ -34,7 +34,8 @@ export function TeileList() {
   const { items, add, update, remove } = useTeile();
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
-  const [q, setQ] = useState('');
+  const q = useUiStore((s) => s.listQuery);
+  const setFirstMatchPath = useUiStore((s) => s.setFirstMatchPath);
   const [editing, setEditing] = useState<Teil | null>(null);
   const [creating, setCreating] = useState(false);
 
@@ -59,6 +60,10 @@ export function TeileList() {
         x.kategorie.toLowerCase().includes(s),
     );
   }, [items, q]);
+
+  useEffect(() => {
+    setFirstMatchPath(filtered.length > 0 ? `${BASE}/${filtered[0].id}` : null);
+  }, [filtered, setFirstMatchPath]);
 
   const columns: Column<Teil>[] = [
     { key: 'artikelnr', header: t('cols.artikelnr'), sortValue: (r) => r.artikelnr, cell: (r) => <span className="num text-xs">{r.artikelnr}</span>, csvValue: (r) => r.artikelnr, width: '120px' },
@@ -112,18 +117,10 @@ export function TeileList() {
         title={t('list.title')}
         description={t('list.description')}
         actions={
-          <>
-            <Input
-              placeholder={tc('actions.search')}
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              className="h-9 w-64"
-            />
-            <Button onClick={() => setCreating(true)}>
-              <Plus size={16} />
-              {t('list.newPart')}
-            </Button>
-          </>
+          <Button onClick={() => setCreating(true)}>
+            <Plus size={16} />
+            {t('list.newPart')}
+          </Button>
         }
       />
 

@@ -9,7 +9,6 @@ import { Money } from '@/components/shared/money';
 import { DateCell } from '@/components/shared/date-cell';
 import { StatusBadge, useStatusLabel } from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Dialog,
@@ -23,6 +22,7 @@ import { downloadCsv } from '@/lib/csv';
 import { usePageTitle } from '@/lib/use-page-title';
 import { useT } from '@/i18n';
 import { toast } from '@/store/toast-store';
+import { useUiStore } from '@/store/ui-store';
 import { customerById } from '@/modules/shared/customers';
 import { useRechnungen } from '@/modules/rechnungen/store';
 import { rechnungById } from '@/modules/rechnungen/store';
@@ -44,7 +44,8 @@ export function MahnungenList() {
   const rechnungen = useRechnungen((s) => s.items);
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
-  const [q, setQ] = useState('');
+  const q = useUiStore((s) => s.listQuery);
+  const setFirstMatchPath = useUiStore((s) => s.setFirstMatchPath);
   const [statusFilter, setStatusFilter] = useState('alle');
   const [modal, setModal] = useState<Modal>(null);
 
@@ -73,6 +74,10 @@ export function MahnungenList() {
       return m.nummer.toLowerCase().includes(s) || k.includes(s) || rn.includes(s);
     });
   }, [items, q, statusFilter]);
+
+  useEffect(() => {
+    setFirstMatchPath(filtered.length > 0 ? `${BASE}/${filtered[0].id}` : null);
+  }, [filtered, setFirstMatchPath]);
 
   function closeViewRoute() {
     setModal(null);
@@ -121,7 +126,6 @@ export function MahnungenList() {
                 {mahnungStatusList.map((s) => <SelectItem key={s} value={s}>{statusLabel(s)}</SelectItem>)}
               </SelectContent>
             </Select>
-            <Input placeholder={tc('actions.search')} value={q} onChange={(e) => setQ(e.target.value)} className="h-9 w-64" />
             <Button onClick={() => setModal({ kind: 'create' })}>
               <Plus size={16} />
               {t('list.newMahnung')}

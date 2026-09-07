@@ -9,7 +9,6 @@ import { Money } from '@/components/shared/money';
 import { DateCell } from '@/components/shared/date-cell';
 import { StatusBadge, useStatusLabel } from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Dialog,
   DialogContent,
@@ -22,6 +21,7 @@ import { downloadCsv } from '@/lib/csv';
 import { usePageTitle } from '@/lib/use-page-title';
 import { useT } from '@/i18n';
 import { toast } from '@/store/toast-store';
+import { useUiStore } from '@/store/ui-store';
 import { customerById, vehicleById } from '@/modules/shared/customers';
 import { useBestellungen } from './store';
 import { berechneSumme, bestellStatusList, type Bestellung } from './types';
@@ -40,7 +40,8 @@ export function BestellungenList() {
   const { items, add, update, remove } = useBestellungen();
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
-  const [q, setQ] = useState('');
+  const q = useUiStore((s) => s.listQuery);
+  const setFirstMatchPath = useUiStore((s) => s.setFirstMatchPath);
   const [statusFilter, setStatusFilter] = useState<string>('alle');
   const [modal, setModal] = useState<ModalMode>(null);
 
@@ -64,6 +65,10 @@ export function BestellungenList() {
       return b.nummer.toLowerCase().includes(s) || b.beschreibung.toLowerCase().includes(s) || kunde.includes(s) || fzg.includes(s);
     });
   }, [items, q, statusFilter]);
+
+  useEffect(() => {
+    setFirstMatchPath(filtered.length > 0 ? `${BASE}/${filtered[0].id}` : null);
+  }, [filtered, setFirstMatchPath]);
 
   function closeViewRoute() {
     setModal(null);
@@ -139,7 +144,6 @@ export function BestellungenList() {
                 ))}
               </SelectContent>
             </Select>
-            <Input placeholder={tc('actions.search')} value={q} onChange={(e) => setQ(e.target.value)} className="h-9 w-64" />
             <Button onClick={() => setModal({ kind: 'create' })}>
               <Plus size={16} />
               {t('list.newOrder')}

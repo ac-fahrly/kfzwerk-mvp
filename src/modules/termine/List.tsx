@@ -8,7 +8,6 @@ import { EmptyState } from '@/components/shared/empty-state';
 import { DateCell, TimeCell } from '@/components/shared/date-cell';
 import { StatusBadge, useStatusLabel } from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
@@ -23,6 +22,7 @@ import { downloadCsv } from '@/lib/csv';
 import { usePageTitle } from '@/lib/use-page-title';
 import { useT } from '@/i18n';
 import { toast } from '@/store/toast-store';
+import { useUiStore } from '@/store/ui-store';
 import { customerById, vehicleById } from '@/modules/shared/customers';
 import { useTermine } from './store';
 import { terminStatusList, type Termin } from './types';
@@ -45,7 +45,8 @@ export function TermineList() {
   const { items, add, update, remove } = useTermine();
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
-  const [q, setQ] = useState('');
+  const q = useUiStore((s) => s.listQuery);
+  const setFirstMatchPath = useUiStore((s) => s.setFirstMatchPath);
   const [statusFilter, setStatusFilter] = useState('alle');
   const [modal, setModal] = useState<Modal>(null);
 
@@ -69,6 +70,10 @@ export function TermineList() {
       return kunde.includes(s) || fzg.includes(s) || r.grund.toLowerCase().includes(s) || r.techniker.toLowerCase().includes(s);
     });
   }, [items, q, statusFilter]);
+
+  useEffect(() => {
+    setFirstMatchPath(filtered.length > 0 ? `${BASE}/${filtered[0].id}` : null);
+  }, [filtered, setFirstMatchPath]);
 
   function closeViewRoute() {
     setModal(null);
@@ -145,7 +150,6 @@ export function TermineList() {
                 ))}
               </SelectContent>
             </Select>
-            <Input placeholder={tc('actions.search')} value={q} onChange={(e) => setQ(e.target.value)} className="h-9 w-64" />
           </div>
 
           <TableToolbar

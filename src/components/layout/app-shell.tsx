@@ -1,12 +1,19 @@
-import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { MobileNav, Sidebar } from './sidebar';
 import { Topbar } from './topbar';
 import { Toaster } from '@/components/shared/toaster';
 import { CommandPalette } from '@/components/shared/command-palette';
 import { useGlobalShortcuts } from '@/lib/use-shortcuts';
+import { useUiStore } from '@/store/ui-store';
 
 export function AppShell() {
   useGlobalShortcuts();
+  const location = useLocation();
+  const base = location.pathname.split('/')[1] ?? '';
+  useEffect(() => {
+    useUiStore.setState({ listQuery: '', firstMatchPath: null });
+  }, [base]);
   return (
     <div className="flex h-full min-h-screen">
       <Sidebar />

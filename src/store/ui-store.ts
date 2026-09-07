@@ -7,6 +7,10 @@ type UiState = {
   commandOpen: boolean;
   setCommandOpen: (v: boolean) => void;
   toggleCommand: () => void;
+  listQuery: string;
+  setListQuery: (v: string) => void;
+  firstMatchPath: string | null;
+  setFirstMatchPath: (v: string | null) => void;
 };
 
 export const useUiStore = create<UiState>((set) => ({
@@ -16,4 +20,8 @@ export const useUiStore = create<UiState>((set) => ({
   commandOpen: false,
   setCommandOpen: (v) => set({ commandOpen: v }),
   toggleCommand: () => set((s) => ({ commandOpen: !s.commandOpen })),
+  listQuery: '',
+  setListQuery: (v) => set({ listQuery: v }),
+  firstMatchPath: null,
+  setFirstMatchPath: (v) => set({ firstMatchPath: v }),
 }));

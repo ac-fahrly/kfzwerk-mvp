@@ -9,7 +9,6 @@ import { Money } from '@/components/shared/money';
 import { DateCell } from '@/components/shared/date-cell';
 import { StatusBadge, useStatusLabel } from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Dialog,
   DialogContent,
@@ -22,6 +21,7 @@ import { downloadCsv } from '@/lib/csv';
 import { usePageTitle } from '@/lib/use-page-title';
 import { useT } from '@/i18n';
 import { toast } from '@/store/toast-store';
+import { useUiStore } from '@/store/ui-store';
 import { customerById } from '@/modules/shared/customers';
 import { useRechnungen } from './store';
 import { istUeberfaellig, offenerBetrag, rechnungStatusList, type Rechnung } from './types';
@@ -47,7 +47,8 @@ export function RechnungenList() {
   const { items, add, update, remove } = useRechnungen();
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
-  const [q, setQ] = useState('');
+  const q = useUiStore((s) => s.listQuery);
+  const setFirstMatchPath = useUiStore((s) => s.setFirstMatchPath);
   const [statusFilter, setStatusFilter] = useState('alle');
   const [modal, setModal] = useState<Modal>(null);
 
@@ -70,6 +71,10 @@ export function RechnungenList() {
       return r.nummer.toLowerCase().includes(s) || kunde.includes(s) || r.notiz?.toLowerCase().includes(s);
     });
   }, [items, q, statusFilter]);
+
+  useEffect(() => {
+    setFirstMatchPath(filtered.length > 0 ? `${BASE}/${filtered[0].id}` : null);
+  }, [filtered, setFirstMatchPath]);
 
   function closeViewRoute() {
     setModal(null);
@@ -142,7 +147,6 @@ export function RechnungenList() {
                 ))}
               </SelectContent>
             </Select>
-            <Input placeholder={tc('actions.search')} value={q} onChange={(e) => setQ(e.target.value)} className="h-9 w-64" />
             <Button onClick={() => setModal({ kind: 'create' })}>
               <Plus size={16} />
               {t('list.newInvoice')}
