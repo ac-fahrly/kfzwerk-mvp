@@ -13,6 +13,7 @@ const routeKeyMap: Record<string, string> = {
   '/termine': 'nav.termine',
   '/mahnungen': 'nav.mahnungen',
   '/teile': 'nav.teile',
+  '/kunden': 'nav.kunden',
 };
 
 const modKey = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl';

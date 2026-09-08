@@ -10,7 +10,8 @@
     "rechnungen": "Rechnungen",
     "termine": "Termine",
     "mahnungen": "Mahnungen",
-    "teile": "Teile Katalog"
+    "teile": "Teile Katalog",
+    "kunden": "Kunden"
   },
   "actions": {
     "save": "Speichern",
@@ -135,6 +136,11 @@
     "invalidTime": "Bitte HH:MM",
     "endBeforeStart": "Ende muss nach Beginn liegen",
     "tooSmall": "Zu klein",
-    "invalidFormat": "Ungültiges Format"
+    "invalidFormat": "Ungültiges Format",
+    "nameRequired": "Name erforderlich",
+    "kennzeichenRequired": "Kennzeichen erforderlich",
+    "herstellerRequired": "Hersteller erforderlich",
+    "modellRequired": "Modell erforderlich",
+    "invalidEmail": "Ungültige E-Mail"
   }
 }

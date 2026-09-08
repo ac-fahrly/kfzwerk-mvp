@@ -1,0 +1,47 @@
+{
+  "list": {
+    "title": "Customers",
+    "description": "Customers and their vehicles.",
+    "newCustomer": "New customer"
+  },
+  "cols": {
+    "name": "Name",
+    "kontakt": "Contact",
+    "ort": "City",
+    "fahrzeuge": "Vehicles"
+  },
+  "empty": {
+    "title": "No customers",
+    "description": "Add your first customer."
+  },
+  "form": {
+    "newTitle": "New customer",
+    "editTitle": "Edit customer",
+    "quickTitle": "Add new customer",
+    "name": "Name",
+    "email": "Email",
+    "telefon": "Phone",
+    "strasse": "Street",
+    "plz": "ZIP",
+    "ort": "City",
+    "vehicles": "Vehicles",
+    "addVehicle": "Add vehicle",
+    "kennzeichen": "Plate",
+    "hersteller": "Make",
+    "modell": "Model",
+    "baujahr": "Year",
+    "vin": "VIN",
+    "vinOptional": "VIN (optional)"
+  },
+  "detail": {
+    "title": "Customer",
+    "contact": "Contact",
+    "address": "Address",
+    "vehicles": "Vehicles",
+    "noVehicles": "No vehicles on file"
+  },
+  "delete": {
+    "title": "Delete customer?",
+    "description": "\"{name}\" and all associated vehicles will be removed."
+  }
+}

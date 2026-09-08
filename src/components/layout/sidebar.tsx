@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import { Calendar, ClipboardList, FileText, Package, Receipt, Wrench, X } from 'lucide-react';
+import { Calendar, ClipboardList, FileText, Package, Receipt, Users, Wrench, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useT } from '@/i18n';
 import { useUiStore } from '@/store/ui-store';
@@ -12,6 +12,7 @@ const nav = [
   { to: '/termine', key: 'nav.termine', icon: Calendar },
   { to: '/mahnungen', key: 'nav.mahnungen', icon: Receipt },
   { to: '/teile', key: 'nav.teile', icon: Package },
+  { to: '/kunden', key: 'nav.kunden', icon: Users },
 ] as const;
 
 function NavItems({ onNavigate }: { onNavigate?: () => void }) {

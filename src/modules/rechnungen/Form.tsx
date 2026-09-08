@@ -8,7 +8,8 @@ import { DialogFooter } from '@/components/ui/dialog';
 import { FormField } from '@/components/shared/form-field';
 import { newId } from '@/lib/id';
 import { useT } from '@/i18n';
-import { customers, vehiclesForCustomer } from '@/modules/shared/customers';
+import { useCustomers, useVehiclesForCustomer } from '@/modules/shared/customers';
+import { KundeQuickAdd } from '@/modules/kunden';
 import { useBestellungen } from '@/modules/bestellungen/store';
 import { berechneSumme } from '@/modules/bestellungen/types';
 import { useStatusLabel } from '@/components/shared/status-badge';
@@ -60,7 +61,8 @@ export function RechnungForm({ initial, onSubmit, onCancel }: Props) {
   const customerId = watch('customerId');
   const status = watch('status');
   const bestellungId = watch('bestellungId');
-  const kundenFahrzeuge = customerId ? vehiclesForCustomer(customerId) : [];
+  const customers = useCustomers();
+  const kundenFahrzeuge = useVehiclesForCustomer(customerId ?? '');
 
   function fillFromBestellung(id: string) {
     const b = bestellungen.find((x) => x.id === id);
@@ -102,25 +104,34 @@ export function RechnungForm({ initial, onSubmit, onCancel }: Props) {
 
       <div className="grid grid-cols-2 gap-4">
         <FormField label={tc('form.kunde')} required error={errors.customerId?.message}>
-          <Controller
-            control={control}
-            name="customerId"
-            render={({ field }) => (
-              <Select
-                value={field.value}
-                onValueChange={(v) => { field.onChange(v); setValue('vehicleId', ''); }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={tc('form.chooseCustomer')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {customers.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
+          <div className="flex gap-2">
+            <Controller
+              control={control}
+              name="customerId"
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onValueChange={(v) => { field.onChange(v); setValue('vehicleId', ''); }}
+                >
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder={tc('form.chooseCustomer')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {customers.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <KundeQuickAdd
+              onCreated={(c, vs) => {
+                setValue('customerId', c.id);
+                if (vs.length === 1) setValue('vehicleId', vs[0].id);
+                else setValue('vehicleId', '');
+              }}
+            />
+          </div>
         </FormField>
         <FormField label={t('form.vehicleOptional')}>
           <Controller

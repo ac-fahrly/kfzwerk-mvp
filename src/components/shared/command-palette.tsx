@@ -9,7 +9,7 @@ import { useBestellungen } from '@/modules/bestellungen/store';
 import { useRechnungen } from '@/modules/rechnungen/store';
 import { useTermine } from '@/modules/termine/store';
 import { useTeile } from '@/modules/teile/store';
-import { customerById, customers, vehicleById } from '@/modules/shared/customers';
+import { customerById, useCustomers, vehicleById } from '@/modules/shared/customers';
 
 type Item = {
   id: string;
@@ -33,6 +33,7 @@ export function CommandPalette() {
   const rechnungen = useRechnungen((s) => s.items);
   const termine = useTermine((s) => s.items);
   const teile = useTeile((s) => s.items);
+  const customers = useCustomers();
 
   const allItems: Item[] = useMemo(() => {
     const pages: Item[] = [
@@ -42,12 +43,13 @@ export function CommandPalette() {
       { id: 'p-termine', label: t('nav.termine'), path: '/termine', section: 'pages', icon: Calendar },
       { id: 'p-mahnungen', label: t('nav.mahnungen'), path: '/mahnungen', section: 'pages', icon: Receipt },
       { id: 'p-teile', label: t('nav.teile'), path: '/teile', section: 'pages', icon: Package },
+      { id: 'p-kunden', label: t('nav.kunden'), path: '/kunden', section: 'pages', icon: User },
     ];
     const customerItems: Item[] = customers.map((c) => ({
       id: `c-${c.id}`,
       label: c.name,
-      sub: c.email,
-      path: '/',
+      sub: c.email || c.ort,
+      path: `/kunden/${c.id}`,
       section: 'customers',
       icon: User,
     }));
@@ -88,7 +90,7 @@ export function CommandPalette() {
       icon: Package,
     }));
     return [...pages, ...customerItems, ...orderItems, ...invoiceItems, ...appointmentItems, ...partItems];
-  }, [t, bestellungen, rechnungen, termine, teile]);
+  }, [t, bestellungen, rechnungen, termine, teile, customers]);
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();

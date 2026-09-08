@@ -8,7 +8,8 @@ import { DialogFooter } from '@/components/ui/dialog';
 import { FormField } from '@/components/shared/form-field';
 import { newId } from '@/lib/id';
 import { useT } from '@/i18n';
-import { customers, vehiclesForCustomer } from '@/modules/shared/customers';
+import { useCustomers, useVehiclesForCustomer } from '@/modules/shared/customers';
+import { KundeQuickAdd } from '@/modules/kunden';
 import { useStatusLabel } from '@/components/shared/status-badge';
 import { terminSchema, type TerminInput } from './schema';
 import { servicegruende, techniker, terminStatusList, type Termin } from './types';
@@ -54,7 +55,8 @@ export function TerminForm({ initial, onSubmit, onCancel, defaultDate }: Props) 
   const status = watch('status');
   const grund = watch('grund');
   const tech = watch('techniker');
-  const kundenFahrzeuge = customerId ? vehiclesForCustomer(customerId) : [];
+  const customers = useCustomers();
+  const kundenFahrzeuge = useVehiclesForCustomer(customerId ?? '');
 
   return (
     <form onSubmit={handleSubmit((v) => onSubmit(v as Termin))} className="space-y-4">
@@ -72,25 +74,34 @@ export function TerminForm({ initial, onSubmit, onCancel, defaultDate }: Props) 
 
       <div className="grid grid-cols-2 gap-4">
         <FormField label={tc('form.kunde')} required error={errors.customerId?.message}>
-          <Controller
-            control={control}
-            name="customerId"
-            render={({ field }) => (
-              <Select
-                value={field.value}
-                onValueChange={(v) => { field.onChange(v); setValue('vehicleId', ''); }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={tc('form.chooseCustomer')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {customers.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
+          <div className="flex gap-2">
+            <Controller
+              control={control}
+              name="customerId"
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onValueChange={(v) => { field.onChange(v); setValue('vehicleId', ''); }}
+                >
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder={tc('form.chooseCustomer')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {customers.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <KundeQuickAdd
+              onCreated={(c, vs) => {
+                setValue('customerId', c.id);
+                if (vs.length === 1) setValue('vehicleId', vs[0].id);
+                else setValue('vehicleId', '');
+              }}
+            />
+          </div>
         </FormField>
         <FormField label={tc('form.fahrzeug')} required error={errors.vehicleId?.message}>
           <Controller

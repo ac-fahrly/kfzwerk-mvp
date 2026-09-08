@@ -6,6 +6,7 @@ import { RechnungenList } from '@/modules/rechnungen';
 import { TermineList } from '@/modules/termine';
 import { MahnungenList } from '@/modules/mahnungen';
 import { TeileList } from '@/modules/teile';
+import { KundenList } from '@/modules/kunden';
 
 export default function App() {
   return (
@@ -22,6 +23,8 @@ export default function App() {
         <Route path="mahnungen/:id" element={<MahnungenList />} />
         <Route path="teile" element={<TeileList />} />
         <Route path="teile/:id" element={<TeileList />} />
+        <Route path="kunden" element={<KundenList />} />
+        <Route path="kunden/:id" element={<KundenList />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

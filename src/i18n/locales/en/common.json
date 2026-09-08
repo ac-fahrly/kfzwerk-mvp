@@ -10,7 +10,8 @@
     "rechnungen": "Invoices",
     "termine": "Appointments",
     "mahnungen": "Reminders",
-    "teile": "Parts Catalog"
+    "teile": "Parts Catalog",
+    "kunden": "Customers"
   },
   "actions": {
     "save": "Save",
@@ -135,6 +136,11 @@
     "invalidTime": "Time format HH:MM",
     "endBeforeStart": "End must be after start",
     "tooSmall": "Too small",
-    "invalidFormat": "Invalid format"
+    "invalidFormat": "Invalid format",
+    "nameRequired": "Name required",
+    "kennzeichenRequired": "Plate required",
+    "herstellerRequired": "Make required",
+    "modellRequired": "Model required",
+    "invalidEmail": "Invalid email"
   }
 }

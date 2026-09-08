@@ -9,6 +9,7 @@ import deRechnungen from './locales/de/rechnungen.json';
 import deTermine from './locales/de/termine.json';
 import deMahnungen from './locales/de/mahnungen.json';
 import deTeile from './locales/de/teile.json';
+import deKunden from './locales/de/kunden.json';
 
 import enCommon from './locales/en/common.json';
 import enDashboard from './locales/en/dashboard.json';
@@ -17,6 +18,7 @@ import enRechnungen from './locales/en/rechnungen.json';
 import enTermine from './locales/en/termine.json';
 import enMahnungen from './locales/en/mahnungen.json';
 import enTeile from './locales/en/teile.json';
+import enKunden from './locales/en/kunden.json';
 
 type Bundle = Record<string, unknown>;
 
@@ -29,6 +31,7 @@ const bundles: Record<Locale, Record<Namespace, Bundle>> = {
     termine: deTermine as Bundle,
     mahnungen: deMahnungen as Bundle,
     teile: deTeile as Bundle,
+    kunden: deKunden as Bundle,
   },
   en: {
     common: enCommon as Bundle,
@@ -38,6 +41,7 @@ const bundles: Record<Locale, Record<Namespace, Bundle>> = {
     termine: enTermine as Bundle,
     mahnungen: enMahnungen as Bundle,
     teile: enTeile as Bundle,
+    kunden: enKunden as Bundle,
   },
 };
 

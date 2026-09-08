@@ -1,0 +1,47 @@
+{
+  "list": {
+    "title": "Kunden",
+    "description": "Kunden und deren Fahrzeuge.",
+    "newCustomer": "Neuer Kunde"
+  },
+  "cols": {
+    "name": "Name",
+    "kontakt": "Kontakt",
+    "ort": "Ort",
+    "fahrzeuge": "Fahrzeuge"
+  },
+  "empty": {
+    "title": "Keine Kunden",
+    "description": "Lege deinen ersten Kunden an."
+  },
+  "form": {
+    "newTitle": "Neuer Kunde",
+    "editTitle": "Kunde bearbeiten",
+    "quickTitle": "Neuen Kunden anlegen",
+    "name": "Name",
+    "email": "E-Mail",
+    "telefon": "Telefon",
+    "strasse": "Straße",
+    "plz": "PLZ",
+    "ort": "Ort",
+    "vehicles": "Fahrzeuge",
+    "addVehicle": "Fahrzeug hinzufügen",
+    "kennzeichen": "Kennzeichen",
+    "hersteller": "Hersteller",
+    "modell": "Modell",
+    "baujahr": "Baujahr",
+    "vin": "VIN",
+    "vinOptional": "VIN (optional)"
+  },
+  "detail": {
+    "title": "Kunde",
+    "contact": "Kontakt",
+    "address": "Adresse",
+    "vehicles": "Fahrzeuge",
+    "noVehicles": "Keine Fahrzeuge hinterlegt"
+  },
+  "delete": {
+    "title": "Kunde löschen?",
+    "description": "„{name}“ und alle zugeordneten Fahrzeuge werden entfernt."
+  }
+}
