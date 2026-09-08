@@ -207,6 +207,7 @@ export function BestellungenList() {
             <BestellungDetail
               b={modal.item}
               onEdit={() => { const item = modal.item; setModal({ kind: 'edit', item }); if (id) navigate(BASE); }}
+              onDismiss={closeViewRoute}
             />
           ) : null}
         </DialogContent>

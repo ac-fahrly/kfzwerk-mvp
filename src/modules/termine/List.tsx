@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Calendar as CalIcon, Pencil, Plus, Trash2 } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
 import { DataTable, type Column } from '@/components/shared/data-table';
@@ -213,6 +213,7 @@ export function TermineList() {
             <TerminView
               termin={modal.item}
               onEdit={() => { const item = modal.item; setModal({ kind: 'edit', item }); if (id) navigate(BASE); }}
+              onDismiss={closeViewRoute}
             />
           ) : null}
         </DialogContent>
@@ -221,7 +222,7 @@ export function TermineList() {
   );
 }
 
-function TerminView({ termin, onEdit }: { termin: Termin; onEdit: () => void }) {
+function TerminView({ termin, onEdit, onDismiss }: { termin: Termin; onEdit: () => void; onDismiss: () => void }) {
   const { t: tt } = useT('termine');
   const { t: tc } = useT('common');
   const kunde = customerById(termin.customerId);
@@ -246,7 +247,13 @@ function TerminView({ termin, onEdit }: { termin: Termin; onEdit: () => void }) 
       <div className="grid grid-cols-2 gap-3 rounded-md border p-3">
         <div>
           <div className="text-xs text-muted-foreground">{tc('form.kunde')}</div>
-          <div className="font-medium">{kunde?.name ?? '—'}</div>
+          {kunde ? (
+            <Link to={`/kunden/${kunde.id}`} onClick={() => onDismiss()} className="font-medium text-primary hover:underline">
+              {kunde.name}
+            </Link>
+          ) : (
+            <div className="font-medium">—</div>
+          )}
           <div className="text-xs text-muted-foreground">{kunde?.telefon}</div>
         </div>
         <div>

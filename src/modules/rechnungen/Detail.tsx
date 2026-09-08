@@ -1,4 +1,5 @@
 import { Pencil, Printer } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { Money } from '@/components/shared/money';
 import { DateCell } from '@/components/shared/date-cell';
@@ -7,7 +8,9 @@ import { useT } from '@/i18n';
 import { customerById, vehicleById } from '@/modules/shared/customers';
 import { offenerBetrag, type Rechnung } from './types';
 
-export function RechnungDetail({ r, onEdit }: { r: Rechnung; onEdit?: () => void }) {
+type Props = { r: Rechnung; onEdit?: () => void; onDismiss?: () => void };
+
+export function RechnungDetail({ r, onEdit, onDismiss }: Props) {
   const { t } = useT('rechnungen');
   const { t: tc } = useT('common');
   const kunde = customerById(r.customerId);
@@ -17,7 +20,17 @@ export function RechnungDetail({ r, onEdit }: { r: Rechnung; onEdit?: () => void
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="num text-xs text-muted-foreground">{r.nummer}</div>
-          <div className="mt-1 text-lg font-semibold">{kunde?.name ?? '—'}</div>
+          {kunde ? (
+            <Link
+              to={`/kunden/${kunde.id}`}
+              onClick={() => onDismiss?.()}
+              className="mt-1 block text-lg font-semibold text-primary hover:underline"
+            >
+              {kunde.name}
+            </Link>
+          ) : (
+            <div className="mt-1 text-lg font-semibold">—</div>
+          )}
           {fahrzeug ? (
             <div className="text-sm text-muted-foreground">
               <span className="num">{fahrzeug.kennzeichen}</span> · {fahrzeug.hersteller} {fahrzeug.modell}

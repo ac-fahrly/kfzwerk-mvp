@@ -37,7 +37,9 @@
   "detail": {
     "title": "Bestellung",
     "eingang": "Eingang",
-    "fertigstellung": "Fertigstellung"
+    "fertigstellung": "Fertigstellung",
+    "createInvoice": "Rechnung erstellen",
+    "openInvoice": "Rechnung öffnen"
   },
   "delete": {
     "title": "Bestellung löschen?",

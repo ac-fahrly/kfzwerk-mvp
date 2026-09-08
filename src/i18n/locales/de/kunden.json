@@ -38,7 +38,27 @@
     "contact": "Kontakt",
     "address": "Adresse",
     "vehicles": "Fahrzeuge",
-    "noVehicles": "Keine Fahrzeuge hinterlegt"
+    "noVehicles": "Keine Fahrzeuge hinterlegt",
+    "kpi": {
+      "openAmount": "Offener Betrag",
+      "activeOrders": "Aktive Bestellungen",
+      "nextAppointment": "Nächster Termin",
+      "vehicleCount": "Fahrzeuge"
+    },
+    "sections": {
+      "activeOrders": "Aktive Bestellungen",
+      "openInvoices": "Offene Rechnungen",
+      "activeReminders": "Aktive Mahnungen",
+      "upcomingAppointments": "Nächste Termine",
+      "serviceHistory": "Servicehistorie",
+      "showHistory": "Historie anzeigen",
+      "hideHistory": "Historie ausblenden",
+      "noActiveOrders": "Keine offenen Aufträge",
+      "noOpenInvoices": "Keine offenen Rechnungen",
+      "noActiveReminders": "Keine aktiven Mahnungen",
+      "noUpcomingAppointments": "Keine geplanten Termine",
+      "noHistory": "Noch keine Aufträge"
+    }
   },
   "delete": {
     "title": "Kunde löschen?",

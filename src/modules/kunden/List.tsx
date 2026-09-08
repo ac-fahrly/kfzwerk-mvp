@@ -189,7 +189,7 @@ export function KundenList() {
       </Dialog>
 
       <Dialog open={modal?.kind === 'view'} onOpenChange={(o) => { if (!o) closeViewRoute(); }}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-3xl">
           <DialogHeader><DialogTitle>{t('detail.title')}</DialogTitle></DialogHeader>
           {modal?.kind === 'view' ? (
             <KundeDetail

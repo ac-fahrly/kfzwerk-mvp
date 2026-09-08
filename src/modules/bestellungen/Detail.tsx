@@ -1,28 +1,83 @@
-import { Pencil } from 'lucide-react';
+import { FileText, Pencil, Plus } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { Money } from '@/components/shared/money';
 import { DateCell } from '@/components/shared/date-cell';
 import { Button } from '@/components/ui/button';
 import { formatNumber } from '@/lib/format';
+import { newId } from '@/lib/id';
 import { useT } from '@/i18n';
+import { toast } from '@/store/toast-store';
 import { customerById, vehicleById } from '@/modules/shared/customers';
+import { useRechnungForBestellung } from '@/modules/shared/queries';
+import { useRechnungen, nextRechnungNummer } from '@/modules/rechnungen/store';
+import type { Rechnung } from '@/modules/rechnungen/types';
 import { berechneSumme, type Bestellung } from './types';
 
-export function BestellungDetail({ b, onEdit }: { b: Bestellung; onEdit?: () => void }) {
+type Props = {
+  b: Bestellung;
+  onEdit?: () => void;
+  onDismiss?: () => void;
+};
+
+export function BestellungDetail({ b, onEdit, onDismiss }: Props) {
   const { t } = useT('bestellungen');
   const { t: tc } = useT('common');
   const kunde = customerById(b.customerId);
   const fahrzeug = vehicleById(b.vehicleId);
   const s = berechneSumme(b.positionen);
+  const existing = useRechnungForBestellung(b.id);
+  const addRechnung = useRechnungen((r) => r.add);
+  const navigate = useNavigate();
+
+  function createInvoice() {
+    const today = new Date();
+    const in14 = new Date(today.getTime() + 14 * 86400_000);
+    const rechnung: Rechnung = {
+      id: newId(),
+      nummer: nextRechnungNummer(),
+      bestellungId: b.id,
+      customerId: b.customerId,
+      vehicleId: b.vehicleId,
+      datum: today.toISOString().slice(0, 10),
+      faelligDatum: in14.toISOString().slice(0, 10),
+      betrag: Number(s.brutto.toFixed(2)),
+      bezahltBetrag: 0,
+      status: 'entwurf',
+    };
+    addRechnung(rechnung);
+    toast.success(tc('toasts.created'));
+    onDismiss?.();
+    navigate(`/rechnungen/${rechnung.id}`);
+  }
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="num text-xs text-muted-foreground">{b.nummer}</div>
           <div className="mt-1 text-lg font-semibold">{b.beschreibung}</div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <StatusBadge status={b.status} />
+          {existing ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                onDismiss?.();
+                navigate(`/rechnungen/${existing.id}`);
+              }}
+            >
+              <FileText size={14} />
+              <span className="num">{existing.nummer}</span>
+            </Button>
+          ) : b.status === 'fertig' ? (
+            <Button variant="default" size="sm" onClick={createInvoice}>
+              <Plus size={14} />
+              {t('detail.createInvoice')}
+            </Button>
+          ) : null}
           {onEdit ? (
             <Button variant="outline" size="sm" onClick={onEdit}>
               <Pencil size={14} />
@@ -35,7 +90,17 @@ export function BestellungDetail({ b, onEdit }: { b: Bestellung; onEdit?: () => 
       <div className="grid grid-cols-2 gap-4 rounded-md border p-4 text-sm">
         <div>
           <div className="text-xs text-muted-foreground">{tc('form.kunde')}</div>
-          <div className="font-medium">{kunde?.name ?? '—'}</div>
+          {kunde ? (
+            <Link
+              to={`/kunden/${kunde.id}`}
+              onClick={() => onDismiss?.()}
+              className="font-medium text-primary hover:underline"
+            >
+              {kunde.name}
+            </Link>
+          ) : (
+            <div className="font-medium">—</div>
+          )}
           <div className="text-xs text-muted-foreground">{kunde?.telefon} · {kunde?.email}</div>
         </div>
         <div>

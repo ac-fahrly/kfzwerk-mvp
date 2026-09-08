@@ -210,6 +210,7 @@ export function RechnungenList() {
             <RechnungDetail
               r={modal.item}
               onEdit={() => { const item = modal.item; setModal({ kind: 'edit', item }); if (id) navigate(BASE); }}
+              onDismiss={closeViewRoute}
             />
           ) : null}
         </DialogContent>

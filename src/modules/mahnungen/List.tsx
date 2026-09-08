@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Pencil, Plus, Receipt, Trash2 } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
 import { DataTable, type Column } from '@/components/shared/data-table';
@@ -211,6 +211,7 @@ export function MahnungenList() {
             <MahnungView
               m={modal.item}
               onEdit={() => { const item = modal.item; setModal({ kind: 'edit', item }); if (id) navigate(BASE); }}
+              onDismiss={closeViewRoute}
             />
           ) : null}
         </DialogContent>
@@ -219,7 +220,7 @@ export function MahnungenList() {
   );
 }
 
-function MahnungView({ m, onEdit }: { m: Mahnung; onEdit: () => void }) {
+function MahnungView({ m, onEdit, onDismiss }: { m: Mahnung; onEdit: () => void; onDismiss: () => void }) {
   const { t } = useT('mahnungen');
   const { t: tc } = useT('common');
   const kunde = customerById(m.customerId);
@@ -229,8 +230,23 @@ function MahnungView({ m, onEdit }: { m: Mahnung; onEdit: () => void }) {
       <div className="flex items-start justify-between gap-2">
         <div>
           <div className="num text-xs text-muted-foreground">{m.nummer}</div>
-          <div className="mt-1 text-lg font-semibold">{kunde?.name ?? '—'}</div>
-          <div className="num text-xs text-muted-foreground">{t('detail.invoiceRef')} {r?.nummer ?? '—'}</div>
+          {kunde ? (
+            <Link to={`/kunden/${kunde.id}`} onClick={() => onDismiss()} className="mt-1 block text-lg font-semibold text-primary hover:underline">
+              {kunde.name}
+            </Link>
+          ) : (
+            <div className="mt-1 text-lg font-semibold">—</div>
+          )}
+          <div className="num text-xs text-muted-foreground">
+            {t('detail.invoiceRef')}{' '}
+            {r ? (
+              <Link to={`/rechnungen/${r.id}`} onClick={() => onDismiss()} className="text-primary hover:underline">
+                {r.nummer}
+              </Link>
+            ) : (
+              '—'
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <StatusBadge status={m.status} />

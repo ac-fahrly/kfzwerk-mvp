@@ -37,7 +37,9 @@
   "detail": {
     "title": "Order",
     "eingang": "Received",
-    "fertigstellung": "Completed"
+    "fertigstellung": "Completed",
+    "createInvoice": "Create invoice",
+    "openInvoice": "Open invoice"
   },
   "delete": {
     "title": "Delete order?",
