@@ -1,0 +1,94 @@
+name: Deploy KFZ Werk FE to Staging
+
+# Mirrors amazon-subs-fe/.github/workflows/deploy.yml. Differences, all forced
+# by this project rather than chosen:
+#   - trigger is `main` (this repo has no `dev` branch)
+#   - pnpm, not npm — this repo pins packageManager: pnpm@9.15.0
+#   - target /var/www/staging-kfzwerk, build env from /root/kfzwerk-frontend/.env
+#
+# A push to main IS a deploy.
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      # VITE_* values are baked into the bundle at BUILD time, so they cannot
+      # come from the server at runtime. Fetching the server's .env keeps the
+      # deployed bundle's API URL and form-encryption key in step with the
+      # backend's own .env, with the values living in exactly one place.
+      - name: Fetch build-time .env from server
+        run: |
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/root/kfzwerk-frontend/.env \
+            .env
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      # Catch the classic misconfiguration before it reaches users: a bundle
+      # still pointing at a developer's localhost API, or built with no
+      # encryption key (every sign-in would throw).
+      - name: Verify the bundle is configured for the server
+        run: |
+          if grep -rq "localhost:300" dist/assets; then
+            echo "Bundle references a localhost API — the server .env was not applied."
+            exit 1
+          fi
+          key=$(grep '^VITE_FORM_ENCRYPTION_KEY=' .env | cut -d= -f2-)
+          if [ -z "$key" ]; then
+            echo "VITE_FORM_ENCRYPTION_KEY is empty in the server .env."
+            exit 1
+          fi
+          grep -rq -- "$key" dist/assets || {
+            echo "The form-encryption key was not baked into the bundle."
+            exit 1
+          }
+          echo "Bundle OK: same-origin /api, encryption key present."
+
+      - name: Deploy static dist to server
+        run: |
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging-kfzwerk/
+
+      - name: Smoke test the deployed site
+        run: |
+          # index.html plus a client-side route, which only answers if nginx's
+          # try_files fallback is in place.
+          for path in / /login; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 \
+              "http://${{ secrets.SSH_HOST }}$path")
+            echo "GET $path -> HTTP $code"
+            test "$code" = "200"
+          done

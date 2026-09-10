@@ -111,11 +111,33 @@ any of those files).
 - Icons: lucide-react at `size={16}` in tables, `size={18}` in buttons, `size={20}` in nav.
 - Empty states use `<EmptyState>` with icon + title + description + optional CTA.
 
+## Deployment
+
+**A push to `main` deploys** via `.github/workflows/deploy.yml`, which mirrors
+`amazon-subs-fe`'s workflow (adapted to pnpm, which this repo pins):
+
+1. fetch `/root/kfzwerk-frontend/.env` from the server — `VITE_*` values are
+   baked in at BUILD time, so they cannot come from the server at runtime, and
+   fetching them keeps the bundle in step with the backend's own `.env`
+2. `pnpm install --frozen-lockfile` && `pnpm build`
+3. fail the build if the bundle still points at a localhost API or has no
+   encryption key — the two misconfigurations that would otherwise ship a site
+   where every sign-in throws
+4. rsync `dist/` to `/var/www/staging-kfzwerk/`, then smoke-test `/` and
+   `/login`
+
+nginx serves the static bundle and proxies `/api` to the backend on :3003, so
+the deployed bundle is built with `VITE_API_URL=/api` — same origin, no CORS.
+Live at <http://167.233.121.201/> (plain HTTP until
+`staging-kfzwerk.fahrlygo.de` has a DNS record and a certificate).
+
+Repo secrets: `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`.
+
 ## Out of scope
 
-- Tests and deployment config. `pnpm build` (tsc + vite) is the verification
-  step. `pnpm lint` is currently broken repo-wide — ESLint 9 needs an
-  `eslint.config.js` and there is none.
+- Tests. `pnpm build` (tsc + vite) is the verification step. `pnpm lint` is
+  currently broken repo-wide — ESLint 9 needs an `eslint.config.js` and there
+  is none.
 - Password reset, email verification, roles/permissions. Registration creates a
   `member` account with an empty workspace.
 
@@ -129,6 +151,13 @@ pnpm build
 pnpm preview
 ```
 
-The backend must be running too — `npm run start:dev` in
-`../kfzwerk-mvp-backend` (default <http://localhost:3002/api>). Without it the
-login page renders but every sign-in fails.
+The backend must be running too, and it needs its database tunnel open first:
+
+```bash
+cd ../kfzwerk-mvp-backend
+npm run db:tunnel      # SSH tunnel to the staging PostgreSQL — leave running
+npm run start:dev      # http://localhost:3002/api
+```
+
+Without the backend the login page renders but every sign-in fails; without the
+tunnel the backend cannot start at all.
