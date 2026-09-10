@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useTheme } from '@/components/theme-provider';
 import { useT } from '@/i18n';
 import { useUiStore } from '@/store/ui-store';
+import { AccountMenu } from './account-menu';
 import { LanguageToggle } from './language-toggle';
 
 const routeKeyMap: Record<string, string> = {
@@ -81,6 +82,7 @@ export function Topbar() {
         <Button variant="ghost" size="icon" onClick={toggle} aria-label={t('theme.toggle')}>
           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
         </Button>
+        <AccountMenu />
       </div>
     </header>
   );

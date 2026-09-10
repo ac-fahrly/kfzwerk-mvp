@@ -34,7 +34,11 @@
   "toasts": {
     "created": "Created",
     "saved": "Saved",
-    "deleted": "Deleted"
+    "deleted": "Deleted",
+    "createFailed": "Could not create",
+    "saveFailed": "Could not save",
+    "deleteFailed": "Could not delete",
+    "loadFailed": "Could not load data"
   },
   "command": {
     "placeholder": "Search or jump to…",

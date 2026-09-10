@@ -20,6 +20,7 @@ import { ConfirmDialog } from '@/components/shared/confirm';
 import { downloadCsv } from '@/lib/csv';
 import { usePageTitle } from '@/lib/use-page-title';
 import { useT } from '@/i18n';
+import { serverError } from '@/lib/api';
 import { toast } from '@/store/toast-store';
 import { useUiStore } from '@/store/ui-store';
 import { customerById } from '@/modules/shared/customers';
@@ -123,7 +124,14 @@ export function RechnungenList() {
             trigger={<Button variant="ghost" size="icon" aria-label={tc('actions.delete')}><Trash2 size={16} /></Button>}
             title={t('delete.title')}
             description={t('delete.description', { nummer: r.nummer })}
-            onConfirm={() => { remove(r.id); toast.success(tc('toasts.deleted')); }}
+            onConfirm={async () => {
+              try {
+                await remove(r.id);
+                toast.success(tc('toasts.deleted'));
+              } catch (err) {
+                toast.error(serverError(err, tc('toasts.deleteFailed')));
+              }
+            }}
           />
         </div>
       ),
@@ -186,7 +194,18 @@ export function RechnungenList() {
       <Dialog open={modal?.kind === 'create'} onOpenChange={(o) => !o && setModal(null)}>
         <DialogContent className="max-w-2xl">
           <DialogHeader><DialogTitle>{t('form.newTitle')}</DialogTitle></DialogHeader>
-          <RechnungForm onSubmit={(r) => { add(r); toast.success(tc('toasts.created')); setModal(null); }} onCancel={() => setModal(null)} />
+          <RechnungForm
+            onSubmit={async (r) => {
+              try {
+                await add(r);
+                toast.success(tc('toasts.created'));
+                setModal(null);
+              } catch (err) {
+                toast.error(serverError(err, tc('toasts.createFailed')));
+              }
+            }}
+            onCancel={() => setModal(null)}
+          />
         </DialogContent>
       </Dialog>
 
@@ -196,7 +215,15 @@ export function RechnungenList() {
           {modal?.kind === 'edit' ? (
             <RechnungForm
               initial={modal.item}
-              onSubmit={(r) => { update(modal.item.id, r); toast.success(tc('toasts.saved')); setModal(null); }}
+              onSubmit={async (r) => {
+                try {
+                  await update(modal.item.id, r);
+                  toast.success(tc('toasts.saved'));
+                  setModal(null);
+                } catch (err) {
+                  toast.error(serverError(err, tc('toasts.saveFailed')));
+                }
+              }}
               onCancel={() => setModal(null)}
             />
           ) : null}

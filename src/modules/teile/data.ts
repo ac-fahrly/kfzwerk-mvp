@@ -1,3 +1,10 @@
+// NOT LOADED BY THE APP any more. The workshop's data lives in PostgreSQL
+// and arrives through the API (see ../../store/create-api-store.ts).
+//
+// This file is kept as the SOURCE of the backend demo dataset: it was
+// extracted verbatim into kfzwerk-mvp-backend/prisma/seed-data.json, which
+// `npm run seed` loads. Edit here, re-extract, and the seeded app still
+// matches the prototype.
 import type { Teil } from './types';
 
 export const seedTeile: Teil[] = [

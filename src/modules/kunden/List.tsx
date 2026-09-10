@@ -17,6 +17,7 @@ import { ConfirmDialog } from '@/components/shared/confirm';
 import { downloadCsv } from '@/lib/csv';
 import { usePageTitle } from '@/lib/use-page-title';
 import { useT } from '@/i18n';
+import { serverError } from '@/lib/api';
 import { toast } from '@/store/toast-store';
 import { useUiStore } from '@/store/ui-store';
 import { useKunden, useVehicles } from './store';
@@ -116,7 +117,16 @@ export function KundenList() {
             trigger={<Button variant="ghost" size="icon" aria-label={tc('actions.delete')}><Trash2 size={16} /></Button>}
             title={t('delete.title')}
             description={t('delete.description', { name: r.name })}
-            onConfirm={() => { removeCustomer(r.id); toast.success(tc('toasts.deleted')); }}
+            onConfirm={async () => {
+              try {
+                await removeCustomer(r.id);
+                toast.success(tc('toasts.deleted'));
+              } catch (err) {
+                // A customer with orders or invoices is protected server-side
+                // and comes back as a 409 with an explanatory message.
+                toast.error(serverError(err, tc('toasts.deleteFailed')));
+              }
+            }}
           />
         </div>
       ),
@@ -169,7 +179,15 @@ export function KundenList() {
         <DialogContent className="max-w-3xl">
           <DialogHeader><DialogTitle>{t('form.newTitle')}</DialogTitle></DialogHeader>
           <KundeForm
-            onSubmit={(c, v) => { saveCustomerWithVehicles(c, v); toast.success(tc('toasts.created')); setModal(null); }}
+            onSubmit={async (c, v) => {
+              try {
+                await saveCustomerWithVehicles(c, v);
+                toast.success(tc('toasts.created'));
+                setModal(null);
+              } catch (err) {
+                toast.error(serverError(err, tc('toasts.createFailed')));
+              }
+            }}
             onCancel={() => setModal(null)}
           />
         </DialogContent>
@@ -181,7 +199,15 @@ export function KundenList() {
           {modal?.kind === 'edit' ? (
             <KundeForm
               initial={{ customer: modal.customer, vehicles: vehicles.filter((v) => v.customerId === modal.customer.id) }}
-              onSubmit={(c, v) => { saveCustomerWithVehicles(c, v); toast.success(tc('toasts.saved')); setModal(null); }}
+              onSubmit={async (c, v) => {
+                try {
+                  await saveCustomerWithVehicles(c, v);
+                  toast.success(tc('toasts.saved'));
+                  setModal(null);
+                } catch (err) {
+                  toast.error(serverError(err, tc('toasts.saveFailed')));
+                }
+              }}
               onCancel={() => setModal(null)}
             />
           ) : null}

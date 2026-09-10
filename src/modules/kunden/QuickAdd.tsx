@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useT } from '@/i18n';
+import { serverError } from '@/lib/api';
 import { toast } from '@/store/toast-store';
 import { useKunden } from './store';
 import { KundeForm } from './Form';
@@ -43,11 +44,15 @@ export function KundeQuickAdd({ onCreated, ariaLabel }: Props) {
             <DialogTitle>{t('form.quickTitle')}</DialogTitle>
           </DialogHeader>
           <KundeForm
-            onSubmit={(c, v) => {
-              saveCustomerWithVehicles(c, v);
-              toast.success(tc('toasts.created'));
-              onCreated(c, v);
-              setOpen(false);
+            onSubmit={async (c, v) => {
+              try {
+                await saveCustomerWithVehicles(c, v);
+                toast.success(tc('toasts.created'));
+                onCreated(c, v);
+                setOpen(false);
+              } catch (err) {
+                toast.error(serverError(err, tc('toasts.createFailed')));
+              }
             }}
             onCancel={() => setOpen(false)}
           />

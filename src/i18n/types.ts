@@ -2,6 +2,7 @@ export type Locale = 'de' | 'en';
 
 export type Namespace =
   | 'common'
+  | 'auth'
   | 'dashboard'
   | 'bestellungen'
   | 'rechnungen'

@@ -34,7 +34,11 @@
   "toasts": {
     "created": "Angelegt",
     "saved": "Gespeichert",
-    "deleted": "Gelöscht"
+    "deleted": "Gelöscht",
+    "createFailed": "Anlegen fehlgeschlagen",
+    "saveFailed": "Speichern fehlgeschlagen",
+    "deleteFailed": "Löschen fehlgeschlagen",
+    "loadFailed": "Daten konnten nicht geladen werden"
   },
   "command": {
     "placeholder": "Suchen oder springen…",

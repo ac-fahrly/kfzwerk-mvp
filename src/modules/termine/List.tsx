@@ -21,6 +21,7 @@ import { ConfirmDialog } from '@/components/shared/confirm';
 import { downloadCsv } from '@/lib/csv';
 import { usePageTitle } from '@/lib/use-page-title';
 import { useT } from '@/i18n';
+import { serverError } from '@/lib/api';
 import { toast } from '@/store/toast-store';
 import { useUiStore } from '@/store/ui-store';
 import { customerById, vehicleById } from '@/modules/shared/customers';
@@ -104,7 +105,14 @@ export function TermineList() {
           <ConfirmDialog
             trigger={<Button variant="ghost" size="icon" aria-label={tc('actions.delete')}><Trash2 size={16} /></Button>}
             title={t('delete.title')}
-            onConfirm={() => { remove(r.id); toast.success(tc('toasts.deleted')); }}
+            onConfirm={async () => {
+              try {
+                await remove(r.id);
+                toast.success(tc('toasts.deleted'));
+              } catch (err) {
+                toast.error(serverError(err, tc('toasts.deleteFailed')));
+              }
+            }}
           />
         </div>
       ),
@@ -187,7 +195,15 @@ export function TermineList() {
           <DialogHeader><DialogTitle>{t('form.newTitle')}</DialogTitle></DialogHeader>
           <TerminForm
             defaultDate={modal?.kind === 'create' ? modal.defaultDate : undefined}
-            onSubmit={(x) => { add(x); toast.success(tc('toasts.created')); setModal(null); }}
+            onSubmit={async (x) => {
+              try {
+                await add(x);
+                toast.success(tc('toasts.created'));
+                setModal(null);
+              } catch (err) {
+                toast.error(serverError(err, tc('toasts.createFailed')));
+              }
+            }}
             onCancel={() => setModal(null)}
           />
         </DialogContent>
@@ -199,7 +215,15 @@ export function TermineList() {
           {modal?.kind === 'edit' ? (
             <TerminForm
               initial={modal.item}
-              onSubmit={(x) => { update(modal.item.id, x); toast.success(tc('toasts.saved')); setModal(null); }}
+              onSubmit={async (x) => {
+                try {
+                  await update(modal.item.id, x);
+                  toast.success(tc('toasts.saved'));
+                  setModal(null);
+                } catch (err) {
+                  toast.error(serverError(err, tc('toasts.saveFailed')));
+                }
+              }}
               onCancel={() => setModal(null)}
             />
           ) : null}

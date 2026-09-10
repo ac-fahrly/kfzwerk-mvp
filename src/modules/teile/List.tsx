@@ -19,6 +19,7 @@ import { formatNumber } from '@/lib/format';
 import { downloadCsv } from '@/lib/csv';
 import { usePageTitle } from '@/lib/use-page-title';
 import { useT } from '@/i18n';
+import { serverError } from '@/lib/api';
 import { toast } from '@/store/toast-store';
 import { useUiStore } from '@/store/ui-store';
 import { useTeile } from './store';
@@ -103,7 +104,14 @@ export function TeileList() {
             }
             title={t('delete.title')}
             description={t('delete.description', { name: r.bezeichnung })}
-            onConfirm={() => { remove(r.id); toast.success(tc('toasts.deleted')); }}
+            onConfirm={async () => {
+              try {
+                await remove(r.id);
+                toast.success(tc('toasts.deleted'));
+              } catch (err) {
+                toast.error(serverError(err, tc('toasts.deleteFailed')));
+              }
+            }}
           />
         </div>
       ),
@@ -158,7 +166,15 @@ export function TeileList() {
             <DialogTitle>{t('form.newTitle')}</DialogTitle>
           </DialogHeader>
           <TeilForm
-            onSubmit={(x) => { add(x); toast.success(tc('toasts.created')); setCreating(false); }}
+            onSubmit={async (x) => {
+              try {
+                await add(x);
+                toast.success(tc('toasts.created'));
+                setCreating(false);
+              } catch (err) {
+                toast.error(serverError(err, tc('toasts.createFailed')));
+              }
+            }}
             onCancel={() => setCreating(false)}
           />
         </DialogContent>
@@ -172,7 +188,16 @@ export function TeileList() {
           {editing ? (
             <TeilForm
               initial={editing}
-              onSubmit={(x) => { update(editing.id, x); toast.success(tc('toasts.saved')); setEditing(null); if (id) navigate(BASE); }}
+              onSubmit={async (x) => {
+                try {
+                  await update(editing.id, x);
+                  toast.success(tc('toasts.saved'));
+                  setEditing(null);
+                  if (id) navigate(BASE);
+                } catch (err) {
+                  toast.error(serverError(err, tc('toasts.saveFailed')));
+                }
+              }}
               onCancel={() => { setEditing(null); if (id) navigate(BASE); }}
             />
           ) : null}

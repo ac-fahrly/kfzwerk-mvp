@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type { Locale, Namespace, Params } from './types';
 
 import deCommon from './locales/de/common.json';
+import deAuth from './locales/de/auth.json';
 import deDashboard from './locales/de/dashboard.json';
 import deBestellungen from './locales/de/bestellungen.json';
 import deRechnungen from './locales/de/rechnungen.json';
@@ -12,6 +13,7 @@ import deTeile from './locales/de/teile.json';
 import deKunden from './locales/de/kunden.json';
 
 import enCommon from './locales/en/common.json';
+import enAuth from './locales/en/auth.json';
 import enDashboard from './locales/en/dashboard.json';
 import enBestellungen from './locales/en/bestellungen.json';
 import enRechnungen from './locales/en/rechnungen.json';
@@ -25,6 +27,7 @@ type Bundle = Record<string, unknown>;
 const bundles: Record<Locale, Record<Namespace, Bundle>> = {
   de: {
     common: deCommon as Bundle,
+    auth: deAuth as Bundle,
     dashboard: deDashboard as Bundle,
     bestellungen: deBestellungen as Bundle,
     rechnungen: deRechnungen as Bundle,
@@ -35,6 +38,7 @@ const bundles: Record<Locale, Record<Namespace, Bundle>> = {
   },
   en: {
     common: enCommon as Bundle,
+    auth: enAuth as Bundle,
     dashboard: enDashboard as Bundle,
     bestellungen: enBestellungen as Bundle,
     rechnungen: enRechnungen as Bundle,
@@ -93,6 +97,22 @@ function makeErrorMap(tCommon: (key: string, params?: Params) => string): z.ZodE
     }
     return { message: ctx.defaultError };
   };
+}
+
+/**
+ * Translate from OUTSIDE React — a store, an interceptor, an auth callback,
+ * anywhere hooks are unavailable. It resolves against the PERSISTED locale
+ * rather than provider state, so it also works before the provider has
+ * mounted.
+ *
+ * Components must keep using `useT`: that re-renders on a language switch,
+ * this returns a plain string and does not.
+ */
+export function translateStatic(ns: Namespace, key: string, params?: Params): string {
+  const locale = getInitialLocale();
+  const val = resolve(bundles[locale][ns], key) ?? resolve(bundles[locale].common, key);
+  if (val == null) return key;
+  return interpolate(val, params);
 }
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {

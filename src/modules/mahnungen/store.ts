@@ -1,9 +1,14 @@
-import { createCrudStore } from '@/store/create-crud-store';
-import { seedMahnungen } from './data';
+import { api } from '@/lib/api';
+import { createApiStore } from '@/store/create-api-store';
 import type { Mahnung } from './types';
 
-export const useMahnungen = createCrudStore<Mahnung>('kfz.mahnungen', seedMahnungen);
+/** Mahnungen — backed by `GET/POST/PATCH/DELETE /api/dunning`. */
+export const useMahnungen = createApiStore<Mahnung>(api.dunning);
 
+/**
+ * Next dunning number for the current year, derived from what this client has
+ * loaded. The API enforces uniqueness per workshop.
+ */
 export function nextMahnNummer(): string {
   const items = useMahnungen.getState().items;
   const year = new Date().getFullYear();

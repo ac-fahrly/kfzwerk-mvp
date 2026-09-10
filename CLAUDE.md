@@ -1,6 +1,10 @@
 # KFZ Werk
 
-Werkstatt-Verwaltung (auto shop management) — Frontend-only prototype. No backend yet.
+Werkstatt-Verwaltung (auto shop management) for a German Kfz-Werkstatt.
+
+Backend: the sibling **`kfzwerk-mvp-backend`** repo (NestJS + Prisma +
+PostgreSQL), which has its own CLAUDE.md. This app talks to it over HTTP and
+holds no data of its own.
 
 ## Stack
 
@@ -11,12 +15,18 @@ Werkstatt-Verwaltung (auto shop management) — Frontend-only prototype. No back
 - date-fns (locale switches with UI language: `de` / `enUS`)
 - lucide-react (icons)
 - Custom lightweight i18n (JSON files per namespace, DE + EN) — see below
+- axios (the ONLY place it appears is `src/lib/api/client.ts`)
+- crypto-js (AES for the login form body only)
 - JetBrains Mono for **all numeric contexts** (money, dates, times, IDs, quantities)
 - Inter for body/UI text
 
 ## Modules
 
-Live under `src/modules/<name>/`. Each module owns: `types.ts`, `data.ts` (seed), `schema.ts` (Zod), `List.tsx`, `Detail.tsx`, `Form.tsx`, `index.ts` (routes).
+Live under `src/modules/<name>/`. Each module owns: `types.ts`, `schema.ts` (Zod), `store.ts` (backend-backed), `List.tsx`, `Detail.tsx`, `Form.tsx`, `index.ts` (routes).
+
+`data.ts` is still there but **is no longer loaded by the app** — it is the
+source the backend's demo dataset was extracted from (see the header comment in
+any of those files).
 
 | Route | Module | Purpose |
 |---|---|---|
@@ -28,10 +38,49 @@ Live under `src/modules/<name>/`. Each module owns: `types.ts`, `data.ts` (seed)
 
 ## Data layer
 
-- Mock data in `src/modules/<name>/data.ts`, validated by Zod on load.
-- App-wide state via `src/store/` (Zustand): each module has a store with `list`, `create`, `update`, `remove`. Persisted to `localStorage` so edits survive reload.
-- Never import mock data outside its module — go through the store.
-- IDs are ULIDs (`src/lib/id.ts`).
+- **PostgreSQL is the source of truth**, reached through the API. Nothing is
+  persisted in the browser any more — a local copy would resurrect deleted rows
+  and hide another user's edits.
+- HTTP lives ONLY in `src/lib/api/`. Stores import `api` from `@/lib/api`;
+  no component, store or hook touches axios.
+- App-wide state is still Zustand, one store per module, still exposing
+  `items` / `add` / `update` / `remove` — so List/Detail/Form components did
+  not change. What changed: the mutators are **async and optimistic**. They
+  apply the change immediately, send the request, and on failure **roll back
+  and rethrow**.
+- **Therefore every call site `await`s a mutator inside try/catch**, toasts
+  success only after it resolves, and shows `serverError(err, fallback)` when
+  it rejects. Toasting success before the server agrees is a bug: the row
+  reappears on the next load.
+- `items` starts empty. `hydrateAll()` (`src/store/data-stores.ts`) loads
+  every store once, right after sign-in; `resetAll()` clears them on sign-out
+  and before a new sign-in, so one account never sees another's rows.
+- IDs are ULIDs generated here (`src/lib/id.ts`) and sent to the API as the
+  row's primary key, so an optimistic row and the stored row are the same row.
+- Business logic over shared numbers belongs to the backend. Part stock used to
+  be adjusted in the bestellungen store; the API owns it now, and that store
+  just re-hydrates `teile` afterwards.
+
+## Auth
+
+- Ported from `amazon-subs-fe`'s login module: `src/features/auth/`
+  (`login-form`, `register-form`, `require-auth`, `context/`) plus
+  `src/pages/login.tsx`. Users can create their own account — the same page
+  toggles between sign-in and registration.
+- The session is a 30-day JWT in `localStorage['kfz.token']`, attached as a
+  Bearer header by the axios request interceptor.
+- The login/registration body is AES-encrypted with
+  `VITE_FORM_ENCRYPTION_KEY`, which MUST equal the backend's
+  `FORM_ENCRYPTION_KEY`. Vite inlines `VITE_*` into the public bundle, so it
+  obfuscates the form body — it is not a secret.
+- `/login` is the only public route; everything else sits inside
+  `<RequireAuth />`, which redirects to `/login` and preserves the attempted
+  URL in router state.
+- A 401 on any request clears the token and dispatches
+  `auth:unauthorized`; the provider drops its state and the guard redirects
+  through the router — never a full-page reload.
+- The login page mounts its OWN `<Toaster />`: the shared one lives in
+  AppShell, which an unauthenticated visitor never renders.
 
 ## Hard rules (do not violate)
 
@@ -64,15 +113,22 @@ Live under `src/modules/<name>/`. Each module owns: `types.ts`, `data.ts` (seed)
 
 ## Out of scope
 
-- Backend, auth, real persistence beyond `localStorage`.
-- i18n toggle (German only for now).
-- Tests, deployment config.
+- Tests and deployment config. `pnpm build` (tsc + vite) is the verification
+  step. `pnpm lint` is currently broken repo-wide — ESLint 9 needs an
+  `eslint.config.js` and there is none.
+- Password reset, email verification, roles/permissions. Registration creates a
+  `member` account with an empty workspace.
 
 ## Commands
 
 ```bash
 pnpm install
+cp .env.example .env.local   # then set VITE_API_URL + VITE_FORM_ENCRYPTION_KEY
 pnpm dev       # http://localhost:5173
 pnpm build
 pnpm preview
 ```
+
+The backend must be running too — `npm run start:dev` in
+`../kfzwerk-mvp-backend` (default <http://localhost:3002/api>). Without it the
+login page renders but every sign-in fails.

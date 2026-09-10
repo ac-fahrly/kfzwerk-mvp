@@ -1,5 +1,6 @@
-import { createCrudStore } from '@/store/create-crud-store';
-import { seedTermine } from './data';
+import { api } from '@/lib/api';
+import { createApiStore } from '@/store/create-api-store';
 import type { Termin } from './types';
 
-export const useTermine = createCrudStore<Termin>('kfz.termine', seedTermine);
+/** Termine — backed by `GET/POST/PATCH/DELETE /api/appointments`. */
+export const useTermine = createApiStore<Termin>(api.appointments);

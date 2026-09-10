@@ -1,13 +1,19 @@
-import { createCrudStore } from '@/store/create-crud-store';
-import { seedRechnungen } from './data';
+import { api } from '@/lib/api';
+import { createApiStore } from '@/store/create-api-store';
 import type { Rechnung } from './types';
 
-export const useRechnungen = createCrudStore<Rechnung>('kfz.rechnungen', seedRechnungen);
+/** Rechnungen — backed by `GET/POST/PATCH/DELETE /api/invoices`. */
+export const useRechnungen = createApiStore<Rechnung>(api.invoices);
 
 export function rechnungById(id: string): Rechnung | undefined {
   return useRechnungen.getState().items.find((r) => r.id === id);
 }
 
+/**
+ * Next invoice number for the current year, derived from what this client has
+ * loaded. The API enforces uniqueness per workshop, so a second browser
+ * creating the same number gets a 409 rather than a duplicate.
+ */
 export function nextRechnungNummer(): string {
   const items = useRechnungen.getState().items;
   const year = new Date().getFullYear();
