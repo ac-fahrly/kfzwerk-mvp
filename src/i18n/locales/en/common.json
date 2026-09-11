@@ -1,8 +1,7 @@
 {
   "brand": "KFZ Werk",
   "app": {
-    "subtitle": "Workshop Management",
-    "version": "v0.1.0 · Prototype"
+    "subtitle": "Workshop Management"
   },
   "nav": {
     "dashboard": "Overview",

@@ -1,8 +1,7 @@
 {
   "brand": "KFZ Werk",
   "app": {
-    "subtitle": "Werkstatt-Verwaltung",
-    "version": "v0.1.0 · Prototype"
+    "subtitle": "Werkstatt-Verwaltung"
   },
   "nav": {
     "dashboard": "Übersicht",

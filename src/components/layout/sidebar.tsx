@@ -53,17 +53,11 @@ function Brand() {
   );
 }
 
-function VersionFooter() {
-  const { t } = useT('common');
-  return <div className="border-t p-3 text-xs text-muted-foreground">{t('app.version')}</div>;
-}
-
 export function Sidebar() {
   return (
     <aside className="hidden w-60 shrink-0 border-r bg-card md:flex md:flex-col">
       <Brand />
       <NavItems />
-      <VersionFooter />
     </aside>
   );
 }
@@ -110,7 +104,6 @@ export function MobileNav() {
           </Button>
         </div>
         <NavItems onNavigate={() => setMobileNavOpen(false)} />
-        <VersionFooter />
       </aside>
     </div>
   );
