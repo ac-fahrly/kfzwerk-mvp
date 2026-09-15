@@ -41,21 +41,39 @@ export function RechnungForm({ initial, onSubmit, onCancel }: Props) {
   } = useForm<RechnungInput>({
     mode: 'onBlur',
     resolver: zodResolver(rechnungSchema),
-    defaultValues:
-      initial ??
-      {
-        id: newId(),
-        nummer: nextRechnungNummer(),
-        bestellungId: '',
-        customerId: '',
-        vehicleId: '',
-        datum: today.toISOString().slice(0, 10),
-        faelligDatum: in14.toISOString().slice(0, 10),
-        betrag: 0,
-        bezahltBetrag: 0,
-        status: 'entwurf',
-        notiz: '',
-      },
+    // Pick the editable fields explicitly rather than spreading `initial`: the
+    // edit dialog hands over the whole store row, which now also carries the
+    // server's `absender`/`empfaenger` snapshot. Those are not part of the DTO,
+    // and the backend's `forbidNonWhitelisted` pipe answers 400 to anything it
+    // does not declare — too high a price for trusting the resolver to strip
+    // unknown keys on every invoice edit.
+    defaultValues: initial
+      ? {
+          id: initial.id,
+          nummer: initial.nummer,
+          bestellungId: initial.bestellungId ?? '',
+          customerId: initial.customerId,
+          vehicleId: initial.vehicleId ?? '',
+          datum: initial.datum,
+          faelligDatum: initial.faelligDatum,
+          betrag: initial.betrag,
+          bezahltBetrag: initial.bezahltBetrag,
+          status: initial.status,
+          notiz: initial.notiz ?? '',
+        }
+      : {
+          id: newId(),
+          nummer: nextRechnungNummer(),
+          bestellungId: '',
+          customerId: '',
+          vehicleId: '',
+          datum: today.toISOString().slice(0, 10),
+          faelligDatum: in14.toISOString().slice(0, 10),
+          betrag: 0,
+          bezahltBetrag: 0,
+          status: 'entwurf',
+          notiz: '',
+        },
   });
 
   const customerId = watch('customerId');
