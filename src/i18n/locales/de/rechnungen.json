@@ -40,6 +40,9 @@
     "openAmount": "Offener Betrag",
     "note": "Notiz",
     "print": "Drucken",
+    "savePdf": "Als PDF speichern",
+    "pdfSaving": "PDF wird erstellt…",
+    "pdfFailed": "PDF konnte nicht erstellt werden.",
     "invoiceTo": "Rechnung an",
     "billingAddress": "Rechnungsadresse"
   },

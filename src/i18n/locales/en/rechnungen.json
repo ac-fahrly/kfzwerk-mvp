@@ -40,6 +40,9 @@
     "openAmount": "Open amount",
     "note": "Note",
     "print": "Print",
+    "savePdf": "Save as PDF",
+    "pdfSaving": "Generating PDF…",
+    "pdfFailed": "Could not generate PDF.",
     "invoiceTo": "Bill to",
     "billingAddress": "Billing address"
   },
