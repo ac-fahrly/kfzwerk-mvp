@@ -1,4 +1,3 @@
-import { useRef, useState } from 'react';
 import { Download, Pencil, Printer } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { StatusBadge } from '@/components/shared/status-badge';
@@ -6,7 +5,7 @@ import { Money } from '@/components/shared/money';
 import { DateCell } from '@/components/shared/date-cell';
 import { Button } from '@/components/ui/button';
 import { useT } from '@/i18n';
-import { saveAsPdf } from '@/lib/pdf';
+import { saveInvoicePdf } from '@/lib/pdf';
 import { toast } from '@/store/toast-store';
 import { customerById, vehicleById } from '@/modules/shared/customers';
 import { offenerBetrag, type Rechnung } from './types';
@@ -18,23 +17,34 @@ export function RechnungDetail({ r, onEdit, onDismiss }: Props) {
   const { t: tc } = useT('common');
   const kunde = customerById(r.customerId);
   const fahrzeug = r.vehicleId ? vehicleById(r.vehicleId) : undefined;
-  const printRef = useRef<HTMLDivElement>(null);
-  const [saving, setSaving] = useState(false);
 
-  async function handleSavePdf() {
-    if (!printRef.current) return;
-    setSaving(true);
+  function handleSavePdf() {
     try {
-      await saveAsPdf(printRef.current, r.nummer);
+      saveInvoicePdf({
+        r,
+        customer: kunde,
+        vehicle: fahrzeug,
+        labels: {
+          title: t('detail.title'),
+          number: t('detail.number'),
+          invoiceDate: t('detail.invoiceDate'),
+          dueDate: t('detail.faellig'),
+          billTo: t('detail.invoiceTo'),
+          vehicle: t('detail.vehicle'),
+          total: t('detail.gesamt'),
+          paid: t('detail.paid'),
+          open: t('detail.openAmount'),
+          note: t('detail.note'),
+          page: (current, total) => t('detail.pageOf', { current, total }),
+        },
+      });
     } catch {
       toast.error(t('detail.pdfFailed'));
-    } finally {
-      setSaving(false);
     }
   }
 
   return (
-    <div ref={printRef} className="print-area space-y-4">
+    <div className="print-area space-y-4">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="num text-xs text-muted-foreground">{r.nummer}</div>
@@ -67,9 +77,9 @@ export function RechnungDetail({ r, onEdit, onDismiss }: Props) {
             <Printer size={14} />
             {t('detail.print')}
           </Button>
-          <Button variant="outline" size="sm" onClick={handleSavePdf} disabled={saving}>
+          <Button variant="outline" size="sm" onClick={handleSavePdf}>
             <Download size={14} />
-            {saving ? t('detail.pdfSaving') : t('detail.savePdf')}
+            {t('detail.savePdf')}
           </Button>
         </div>
       </div>

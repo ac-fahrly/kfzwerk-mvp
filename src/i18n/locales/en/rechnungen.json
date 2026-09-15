@@ -41,10 +41,12 @@
     "note": "Note",
     "print": "Print",
     "savePdf": "Save as PDF",
-    "pdfSaving": "Generating PDF…",
     "pdfFailed": "Could not generate PDF.",
     "invoiceTo": "Bill to",
-    "billingAddress": "Billing address"
+    "billingAddress": "Billing address",
+    "number": "No.",
+    "vehicle": "Vehicle",
+    "pageOf": "Page {current} of {total}"
   },
   "delete": {
     "title": "Delete invoice?",

@@ -41,10 +41,12 @@
     "note": "Notiz",
     "print": "Drucken",
     "savePdf": "Als PDF speichern",
-    "pdfSaving": "PDF wird erstellt…",
     "pdfFailed": "PDF konnte nicht erstellt werden.",
     "invoiceTo": "Rechnung an",
-    "billingAddress": "Rechnungsadresse"
+    "billingAddress": "Rechnungsadresse",
+    "number": "Nr.",
+    "vehicle": "Fahrzeug",
+    "pageOf": "Seite {current} von {total}"
   },
   "delete": {
     "title": "Rechnung löschen?",
