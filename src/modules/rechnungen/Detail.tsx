@@ -8,6 +8,7 @@ import { useT } from '@/i18n';
 import { saveInvoicePdf } from '@/lib/pdf';
 import { toast } from '@/store/toast-store';
 import { customerById, vehicleById } from '@/modules/shared/customers';
+import { getBusinessSettings } from '@/modules/settings';
 import { offenerBetrag, type Rechnung } from './types';
 
 type Props = { r: Rechnung; onEdit?: () => void; onDismiss?: () => void };
@@ -24,17 +25,24 @@ export function RechnungDetail({ r, onEdit, onDismiss }: Props) {
         r,
         customer: kunde,
         vehicle: fahrzeug,
+        business: getBusinessSettings(),
         labels: {
           title: t('detail.title'),
           number: t('detail.number'),
           invoiceDate: t('detail.invoiceDate'),
           dueDate: t('detail.faellig'),
+          from: t('detail.from'),
           billTo: t('detail.invoiceTo'),
           vehicle: t('detail.vehicle'),
           total: t('detail.gesamt'),
           paid: t('detail.paid'),
           open: t('detail.openAmount'),
           note: t('detail.note'),
+          ustId: t('detail.ustId'),
+          steuernummer: t('detail.steuernummer'),
+          iban: t('detail.iban'),
+          bic: t('detail.bic'),
+          bank: t('detail.bank'),
           page: (current, total) => t('detail.pageOf', { current, total }),
         },
       });

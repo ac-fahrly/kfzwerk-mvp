@@ -31,7 +31,8 @@
     "modell": "Modell",
     "baujahr": "Baujahr",
     "vin": "VIN",
-    "vinOptional": "VIN (optional)"
+    "vinOptional": "VIN (optional)",
+    "ustId": "USt-IdNr."
   },
   "detail": {
     "title": "Kunde",

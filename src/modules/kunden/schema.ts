@@ -18,6 +18,7 @@ export const customerSchema = z.object({
   strasse: z.string().optional().or(z.literal('')),
   plz: z.string().optional().or(z.literal('')),
   ort: z.string().optional().or(z.literal('')),
+  ustId: z.string().optional().or(z.literal('')),
 });
 
 export const customerWithVehiclesSchema = z.object({

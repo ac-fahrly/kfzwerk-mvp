@@ -11,6 +11,7 @@ import deTermine from './locales/de/termine.json';
 import deMahnungen from './locales/de/mahnungen.json';
 import deTeile from './locales/de/teile.json';
 import deKunden from './locales/de/kunden.json';
+import deSettings from './locales/de/settings.json';
 
 import enCommon from './locales/en/common.json';
 import enAuth from './locales/en/auth.json';
@@ -21,6 +22,7 @@ import enTermine from './locales/en/termine.json';
 import enMahnungen from './locales/en/mahnungen.json';
 import enTeile from './locales/en/teile.json';
 import enKunden from './locales/en/kunden.json';
+import enSettings from './locales/en/settings.json';
 
 type Bundle = Record<string, unknown>;
 
@@ -35,6 +37,7 @@ const bundles: Record<Locale, Record<Namespace, Bundle>> = {
     mahnungen: deMahnungen as Bundle,
     teile: deTeile as Bundle,
     kunden: deKunden as Bundle,
+    settings: deSettings as Bundle,
   },
   en: {
     common: enCommon as Bundle,
@@ -46,6 +49,7 @@ const bundles: Record<Locale, Record<Namespace, Bundle>> = {
     mahnungen: enMahnungen as Bundle,
     teile: enTeile as Bundle,
     kunden: enKunden as Bundle,
+    settings: enSettings as Bundle,
   },
 };
 

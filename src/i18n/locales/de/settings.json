@@ -1,0 +1,24 @@
+{
+  "title": "Einstellungen",
+  "description": "Geschäftsdaten für deine Rechnungen. Die Angaben werden im Kopf jeder Rechnung angezeigt.",
+  "sections": {
+    "business": "Firma",
+    "tax": "Steuer",
+    "contact": "Kontakt",
+    "bank": "Bankverbindung"
+  },
+  "form": {
+    "name": "Firmenname",
+    "strasse": "Straße",
+    "plz": "PLZ",
+    "ort": "Ort",
+    "land": "Land",
+    "ustId": "USt-IdNr.",
+    "steuernummer": "Steuernummer",
+    "email": "E-Mail",
+    "telefon": "Telefon",
+    "iban": "IBAN",
+    "bic": "BIC",
+    "bank": "Bank"
+  }
+}

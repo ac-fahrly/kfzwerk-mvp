@@ -9,6 +9,7 @@ export type Namespace =
   | 'termine'
   | 'mahnungen'
   | 'teile'
-  | 'kunden';
+  | 'kunden'
+  | 'settings';
 
 export type Params = Record<string, string | number>;

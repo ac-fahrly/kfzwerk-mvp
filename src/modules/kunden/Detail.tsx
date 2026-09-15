@@ -52,6 +52,11 @@ export function KundeDetail({ customer, onEdit }: Props) {
           <div className="text-xs text-muted-foreground">{t('detail.title')}</div>
           <div className="mt-1 text-lg font-semibold">{customer.name}</div>
           {customer.email ? <div className="text-xs text-muted-foreground">{customer.email}</div> : null}
+          {customer.ustId ? (
+            <div className="num text-xs text-muted-foreground">
+              {t('form.ustId')}: {customer.ustId}
+            </div>
+          ) : null}
         </div>
         <Button variant="outline" size="sm" onClick={onEdit}>
           <Pencil size={14} />

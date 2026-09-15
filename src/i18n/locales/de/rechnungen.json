@@ -46,6 +46,12 @@
     "billingAddress": "Rechnungsadresse",
     "number": "Nr.",
     "vehicle": "Fahrzeug",
+    "from": "Von",
+    "ustId": "USt-IdNr.",
+    "steuernummer": "Steuernummer",
+    "iban": "IBAN",
+    "bic": "BIC",
+    "bank": "Bank",
     "pageOf": "Seite {current} von {total}"
   },
   "delete": {

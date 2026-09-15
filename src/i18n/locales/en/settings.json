@@ -1,0 +1,24 @@
+{
+  "title": "Settings",
+  "description": "Your business details for invoices. These appear in the header of every invoice.",
+  "sections": {
+    "business": "Company",
+    "tax": "Tax",
+    "contact": "Contact",
+    "bank": "Bank"
+  },
+  "form": {
+    "name": "Company name",
+    "strasse": "Street",
+    "plz": "ZIP",
+    "ort": "City",
+    "land": "Country",
+    "ustId": "VAT ID",
+    "steuernummer": "Tax number",
+    "email": "Email",
+    "telefon": "Phone",
+    "iban": "IBAN",
+    "bic": "BIC",
+    "bank": "Bank"
+  }
+}

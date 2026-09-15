@@ -9,6 +9,7 @@ import { TermineList } from '@/modules/termine';
 import { MahnungenList } from '@/modules/mahnungen';
 import { TeileList } from '@/modules/teile';
 import { KundenList } from '@/modules/kunden';
+import { SettingsPage } from '@/modules/settings';
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="teile/:id" element={<TeileList />} />
           <Route path="kunden" element={<KundenList />} />
           <Route path="kunden/:id" element={<KundenList />} />
+          <Route path="settings" element={<SettingsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Route>

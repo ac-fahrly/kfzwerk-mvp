@@ -10,7 +10,8 @@
     "termine": "Appointments",
     "mahnungen": "Reminders",
     "teile": "Parts Catalog",
-    "kunden": "Customers"
+    "kunden": "Customers",
+    "settings": "Settings"
   },
   "actions": {
     "save": "Save",

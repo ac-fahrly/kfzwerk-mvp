@@ -6,6 +6,7 @@ export type Customer = {
   strasse: string;
   plz: string;
   ort: string;
+  ustId?: string;
 };
 
 export type Vehicle = {

@@ -10,7 +10,8 @@
     "termine": "Termine",
     "mahnungen": "Mahnungen",
     "teile": "Teile Katalog",
-    "kunden": "Kunden"
+    "kunden": "Kunden",
+    "settings": "Einstellungen"
   },
   "actions": {
     "save": "Speichern",

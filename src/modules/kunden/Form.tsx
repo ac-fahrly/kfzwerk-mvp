@@ -40,6 +40,7 @@ export function KundeForm({ initial, onSubmit, onCancel }: Props) {
         strasse: '',
         plz: '',
         ort: '',
+        ustId: '',
       },
       vehicles: [],
     },
@@ -81,6 +82,9 @@ export function KundeForm({ initial, onSubmit, onCancel }: Props) {
         </FormField>
         <FormField label={t('form.ort')}>
           <Input {...register('customer.ort')} />
+        </FormField>
+        <FormField label={t('form.ustId')} className="sm:col-span-2">
+          <Input {...register('customer.ustId')} className="num" placeholder="DE123456789" />
         </FormField>
       </div>
 
