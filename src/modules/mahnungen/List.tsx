@@ -31,6 +31,7 @@ import { istUeberfaellig, offenerBetrag } from '@/modules/rechnungen/types';
 import { useMahnungen } from './store';
 import { mahnungStatusList, type Mahnung } from './types';
 import { MahnungForm } from './Form';
+import { formatCsvNumber } from '@/lib/format';
 
 type Modal = { kind: 'create' } | { kind: 'edit'; item: Mahnung } | { kind: 'view'; item: Mahnung } | null;
 
@@ -92,8 +93,8 @@ export function MahnungenList() {
     { key: 'rechnung', header: t('cols.rechnung'), sortValue: (r) => rechnungById(r.rechnungId)?.nummer ?? '', cell: (r) => <span className="num text-xs text-muted-foreground">{rechnungById(r.rechnungId)?.nummer ?? '—'}</span>, csvValue: (r) => rechnungById(r.rechnungId)?.nummer ?? '', width: '140px' },
     { key: 'status', header: t('cols.stufe'), sortValue: (r) => r.status, cell: (r) => <StatusBadge status={r.status} />, csvValue: (r) => statusLabel(r.status), width: '190px' },
     { key: 'faellig', header: t('cols.faellig'), align: 'right', sortValue: (r) => r.faelligDatum, cell: (r) => <DateCell value={r.faelligDatum} />, csvValue: (r) => r.faelligDatum, width: '110px' },
-    { key: 'offen', header: t('cols.offen'), align: 'right', sortValue: (r) => r.offenerBetrag, cell: (r) => <Money value={r.offenerBetrag} />, csvValue: (r) => r.offenerBetrag.toFixed(2), width: '120px' },
-    { key: 'gebuehr', header: t('cols.gebuehr'), align: 'right', sortValue: (r) => r.mahngebuehr, cell: (r) => <Money value={r.mahngebuehr} />, csvValue: (r) => r.mahngebuehr.toFixed(2), width: '110px' },
+    { key: 'offen', header: t('cols.offen'), align: 'right', sortValue: (r) => r.offenerBetrag, cell: (r) => <Money value={r.offenerBetrag} />, csvValue: (r) => formatCsvNumber(r.offenerBetrag), width: '120px' },
+    { key: 'gebuehr', header: t('cols.gebuehr'), align: 'right', sortValue: (r) => r.mahngebuehr, cell: (r) => <Money value={r.mahngebuehr} />, csvValue: (r) => formatCsvNumber(r.mahngebuehr), width: '110px' },
     {
       key: 'actions',
       header: '',

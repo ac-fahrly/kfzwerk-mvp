@@ -28,6 +28,7 @@ import { useBestellungen } from './store';
 import { berechneSumme, bestellStatusList, type Bestellung } from './types';
 import { BestellungForm } from './Form';
 import { BestellungDetail } from './Detail';
+import { formatCsvNumber } from '@/lib/format';
 
 type ModalMode = { kind: 'create' } | { kind: 'edit'; item: Bestellung } | { kind: 'view'; item: Bestellung } | null;
 
@@ -106,7 +107,7 @@ export function BestellungenList() {
       },
     },
     { key: 'status', header: t('cols.status'), sortValue: (r) => r.status, cell: (r) => <StatusBadge status={r.status} />, csvValue: (r) => statusLabel(r.status), width: '160px' },
-    { key: 'brutto', header: t('cols.brutto'), align: 'right', sortValue: (r) => berechneSumme(r.positionen).brutto, cell: (r) => <Money value={berechneSumme(r.positionen).brutto} />, csvValue: (r) => berechneSumme(r.positionen).brutto.toFixed(2), width: '120px' },
+    { key: 'brutto', header: t('cols.brutto'), align: 'right', sortValue: (r) => berechneSumme(r.positionen).brutto, cell: (r) => <Money value={berechneSumme(r.positionen).brutto} />, csvValue: (r) => formatCsvNumber(berechneSumme(r.positionen).brutto), width: '120px' },
     {
       key: 'actions',
       header: '',

@@ -28,6 +28,7 @@ import { useRechnungen } from './store';
 import { istUeberfaellig, offenerBetrag, rechnungStatusList, type Rechnung } from './types';
 import { RechnungForm } from './Form';
 import { RechnungDetail } from './Detail';
+import { formatCsvNumber } from '@/lib/format';
 
 type Modal = { kind: 'create' } | { kind: 'edit'; item: Rechnung } | { kind: 'view'; item: Rechnung } | null;
 
@@ -110,8 +111,8 @@ export function RechnungenList() {
       width: '120px',
     },
     { key: 'status', header: t('cols.status'), sortValue: (r) => r.status, cell: (r) => <StatusBadge status={r.status} />, csvValue: (r) => statusLabel(r.status), width: '150px' },
-    { key: 'betrag', header: t('cols.gesamt'), align: 'right', sortValue: (r) => r.betrag, cell: (r) => <Money value={r.betrag} />, csvValue: (r) => r.betrag.toFixed(2), width: '120px' },
-    { key: 'offen', header: t('cols.offen'), align: 'right', sortValue: (r) => offenerBetrag(r), cell: (r) => <Money value={offenerBetrag(r)} />, csvValue: (r) => offenerBetrag(r).toFixed(2), width: '120px' },
+    { key: 'betrag', header: t('cols.gesamt'), align: 'right', sortValue: (r) => r.betrag, cell: (r) => <Money value={r.betrag} />, csvValue: (r) => formatCsvNumber(r.betrag), width: '120px' },
+    { key: 'offen', header: t('cols.offen'), align: 'right', sortValue: (r) => offenerBetrag(r), cell: (r) => <Money value={offenerBetrag(r)} />, csvValue: (r) => formatCsvNumber(offenerBetrag(r)), width: '120px' },
     {
       key: 'actions',
       header: '',

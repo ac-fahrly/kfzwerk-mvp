@@ -15,7 +15,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ConfirmDialog } from '@/components/shared/confirm';
-import { formatNumber } from '@/lib/format';
+import { formatCsvNumber, formatNumber } from '@/lib/format';
 import { downloadCsv } from '@/lib/csv';
 import { usePageTitle } from '@/lib/use-page-title';
 import { useT } from '@/i18n';
@@ -84,8 +84,8 @@ export function TeileList() {
       csvValue: (r) => r.bestand,
       width: '130px',
     },
-    { key: 'ekPreis', header: t('cols.ek'), align: 'right', sortValue: (r) => r.ekPreis, cell: (r) => <Money value={r.ekPreis} />, csvValue: (r) => r.ekPreis.toFixed(2), width: '110px' },
-    { key: 'vkPreis', header: t('cols.vk'), align: 'right', sortValue: (r) => r.vkPreis, cell: (r) => <Money value={r.vkPreis} />, csvValue: (r) => r.vkPreis.toFixed(2), width: '110px' },
+    { key: 'ekPreis', header: t('cols.ek'), align: 'right', sortValue: (r) => r.ekPreis, cell: (r) => <Money value={r.ekPreis} />, csvValue: (r) => formatCsvNumber(r.ekPreis), width: '110px' },
+    { key: 'vkPreis', header: t('cols.vk'), align: 'right', sortValue: (r) => r.vkPreis, cell: (r) => <Money value={r.vkPreis} />, csvValue: (r) => formatCsvNumber(r.vkPreis), width: '110px' },
     {
       key: 'actions',
       header: '',

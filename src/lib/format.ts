@@ -60,3 +60,14 @@ export function formatDateTime(d: Date | string) {
   const date = typeof d === 'string' ? new Date(d) : d;
   return `${formatDate(date)}${NBSP}${formatTime(date)}`;
 }
+
+/**
+ * A number for a CSV cell: German decimal comma, no thousands separator, no
+ * currency symbol. `toFixed(2)` writes "1428.00", which German Excel reads as
+ * text — the column then refuses to SUM. No grouping either, because "1.428,00"
+ * is ambiguous to a spreadsheet importing with the wrong locale, while
+ * "1428,00" is not.
+ */
+export function formatCsvNumber(n: number, decimals = 2) {
+  return n.toFixed(decimals).replace('.', ',');
+}
