@@ -1,16 +1,15 @@
 import { jsPDF } from 'jspdf';
 import { formatDate, formatMoney } from '@/lib/format';
-import type { Customer, Vehicle } from '@/modules/kunden/types';
+import type { Vehicle } from '@/modules/kunden/types';
 import type { Rechnung } from '@/modules/rechnungen/types';
 import { offenerBetrag } from '@/modules/rechnungen/types';
-import type { BusinessSettings } from '@/modules/settings/types';
+import { emptyBusinessSettings, type BusinessSettings } from '@/modules/settings/types';
 
 export type InvoicePdfLabels = {
   title: string;
   number: string;
   invoiceDate: string;
   dueDate: string;
-  from: string;
   billTo: string;
   vehicle: string;
   total: string;
@@ -25,11 +24,16 @@ export type InvoicePdfLabels = {
   page: (current: number, total: number) => string;
 };
 
+/**
+ * Everything the document says about the two parties is READ OFF THE INVOICE
+ * (`r.absender` / `r.empfaenger`), which the server froze when the invoice was
+ * issued. Reprinting therefore reproduces what the customer received, even
+ * after the workshop changes its bank or the customer moves — and this function
+ * no longer depends on any store having hydrated.
+ */
 type Args = {
   r: Rechnung;
-  customer: Customer | undefined;
   vehicle: Vehicle | undefined;
-  business: BusinessSettings;
   labels: InvoicePdfLabels;
   filename?: string;
 };
@@ -40,7 +44,12 @@ const MARGIN_X = 20;
 const MARGIN_TOP = 20;
 const MARGIN_BOTTOM = 18;
 
-export function saveInvoicePdf({ r, customer, vehicle, business, labels, filename }: Args): void {
+export function saveInvoicePdf({ r, vehicle, labels, filename }: Args): void {
+  // A draft created before the workshop filled in its profile has an empty
+  // snapshot; the blanks then simply drop out of the letterhead below.
+  const business = r.absender ?? emptyBusinessSettings;
+  const billTo = r.empfaenger;
+
   const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
   pdf.setFont('helvetica', 'normal');
 
@@ -85,20 +94,16 @@ export function saveInvoicePdf({ r, customer, vehicle, business, labels, filenam
   y += 5;
   pdf.setFontSize(11);
   pdf.setTextColor(20);
-  if (customer) {
-    pdf.setFont('helvetica', 'bold');
-    pdf.text(customer.name || '—', MARGIN_X, y);
-    pdf.setFont('helvetica', 'normal');
-    if (customer.strasse) pdf.text(customer.strasse, MARGIN_X, y + 5);
-    const cityLine = `${customer.plz ?? ''} ${customer.ort ?? ''}`.trim();
-    if (cityLine) pdf.text(cityLine, MARGIN_X, y + 10);
-    if (customer.ustId) {
-      pdf.setFontSize(9);
-      pdf.setTextColor(120);
-      pdf.text(`${labels.ustId} ${customer.ustId}`, MARGIN_X, y + 16);
-    }
-  } else {
-    pdf.text('—', MARGIN_X, y);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text(billTo?.name || '—', MARGIN_X, y);
+  pdf.setFont('helvetica', 'normal');
+  if (billTo?.strasse) pdf.text(billTo.strasse, MARGIN_X, y + 5);
+  const billToCity = `${billTo?.plz ?? ''} ${billTo?.ort ?? ''}`.trim();
+  if (billToCity) pdf.text(billToCity, MARGIN_X, y + 10);
+  if (billTo?.ustId) {
+    pdf.setFontSize(9);
+    pdf.setTextColor(120);
+    pdf.text(`${labels.ustId} ${billTo.ustId}`, MARGIN_X, y + 16);
   }
 
   pdf.setFont('helvetica', 'normal');

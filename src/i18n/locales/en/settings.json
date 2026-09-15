@@ -1,6 +1,11 @@
 {
   "title": "Settings",
   "description": "Your business details for invoices. These appear in the header of every invoice.",
+  "loadFailed": "Could not load your business details.",
+  "retry": "Try again",
+  "legacy": {
+    "notice": "These values came from this browser. Check them and save, so they live on the server."
+  },
   "sections": {
     "business": "Company",
     "tax": "Tax",

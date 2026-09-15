@@ -12,6 +12,7 @@ import type { Bestellung } from '@/modules/bestellungen/types';
 import type { Customer, Vehicle } from '@/modules/kunden/types';
 import type { Mahnung } from '@/modules/mahnungen/types';
 import type { Rechnung } from '@/modules/rechnungen/types';
+import type { BusinessSettings } from '@/modules/settings/types';
 import type { Teil } from '@/modules/teile/types';
 import type { Termin } from '@/modules/termine/types';
 
@@ -60,6 +61,44 @@ export const vehiclesApi = {
 
 export const partsApi = crud<Teil>('parts');
 export const ordersApi = crud<Bestellung>('orders');
-export const invoicesApi = crud<Rechnung>('invoices');
 export const appointmentsApi = crud<Termin>('appointments');
 export const dunningApi = crud<Mahnung>('dunning');
+
+/**
+ * `absender` and `empfaenger` are SERVER-OWNED: the API freezes both parties
+ * onto the invoice when it is issued, and `CreateInvoiceDto`/`UpdateInvoiceDto`
+ * do not declare them, so the backend's `forbidNonWhitelisted` pipe answers 400
+ * to a body that carries one.
+ *
+ * Every invoice write is stripped here, in the one place they all pass through,
+ * rather than trusting each call site to hand over a clean object: the store
+ * rows DO carry both after hydration, and a plausible one-liner like
+ * `update(r.id, { ...r, status: 'bezahlt' })` typechecks (spread properties are
+ * exempt from excess-property checking), so the compiler would not catch it.
+ */
+function invoiceWrite<T extends Partial<Rechnung>>(r: T) {
+  const { absender: _absender, empfaenger: _empfaenger, ...write } = r;
+  return write;
+}
+
+export const invoicesApi = {
+  ...crud<Rechnung>('invoices'),
+  create: (item: Rechnung) => sendJson<Rechnung>('post', '/invoices', invoiceWrite(item)),
+  update: (id: string, patch: Partial<Rechnung>) =>
+    sendJson<Rechnung>('patch', `/invoices/${id}`, invoiceWrite(patch)),
+};
+
+/**
+ * Einstellungen: ONE business profile per workshop, addressed by the session,
+ * not by an id — hence GET/PUT on a fixed path instead of `crud`, which assumes
+ * a collection with `/:id`. `vehiclesApi` above is the precedent for a
+ * hand-written client in this file.
+ *
+ * GET never 404s: a workshop that has never saved a profile gets all-empty
+ * strings, which is the frontend's `emptyBusinessSettings`.
+ */
+export const settingsApi = {
+  getBusiness: () => getJson<BusinessSettings>('/settings/business'),
+  saveBusiness: (b: BusinessSettings) =>
+    sendJson<BusinessSettings>('put', '/settings/business', b),
+};

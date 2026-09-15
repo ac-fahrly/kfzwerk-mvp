@@ -2,6 +2,7 @@ import { useBestellungen } from '@/modules/bestellungen/store';
 import { useKunden } from '@/modules/kunden/store';
 import { useMahnungen } from '@/modules/mahnungen/store';
 import { useRechnungen } from '@/modules/rechnungen/store';
+import { useBusinessSettings } from '@/modules/settings/store';
 import { useTeile } from '@/modules/teile/store';
 import { useTermine } from '@/modules/termine/store';
 
@@ -10,12 +11,23 @@ import { useTermine } from '@/modules/termine/store';
  * load and clear all of them in one place.
  *
  * Every list, detail view and dashboard KPI reads from these stores, and the
- * dashboard needs all six at once, so the app loads the whole working set on
- * sign-in rather than per route. For a single workshop's data that is a handful
- * of small requests; when a dataset outgrows that, the fix is per-route
- * hydration, not a client-side cache.
+ * dashboard needs most of them at once, so the app loads the whole working
+ * set on sign-in rather than per route. For a single workshop's data that is
+ * a handful of small requests; when a dataset outgrows that, the fix is
+ * per-route hydration, not a client-side cache.
  */
-const stores = [useKunden, useTeile, useBestellungen, useRechnungen, useTermine, useMahnungen];
+const stores = [
+  useKunden,
+  useTeile,
+  useBestellungen,
+  useRechnungen,
+  useTermine,
+  useMahnungen,
+  // Not a list: one business profile per workshop. It joins the registry
+  // anyway because it needs exactly the same lifecycle — loaded once after
+  // sign-in, cleared on sign-out.
+  useBusinessSettings,
+];
 
 /**
  * Load every store. Runs in parallel and NEVER throws: a rejected request

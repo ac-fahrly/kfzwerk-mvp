@@ -1,6 +1,11 @@
 {
   "title": "Einstellungen",
   "description": "Geschäftsdaten für deine Rechnungen. Die Angaben werden im Kopf jeder Rechnung angezeigt.",
+  "loadFailed": "Geschäftsdaten konnten nicht geladen werden.",
+  "retry": "Erneut versuchen",
+  "legacy": {
+    "notice": "Diese Werte stammen aus diesem Browser. Bitte prüfen und speichern, damit sie auf dem Server liegen."
+  },
   "sections": {
     "business": "Firma",
     "tax": "Steuer",

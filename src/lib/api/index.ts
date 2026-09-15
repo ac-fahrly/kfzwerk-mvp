@@ -7,6 +7,7 @@ import {
   invoicesApi,
   ordersApi,
   partsApi,
+  settingsApi,
   vehiclesApi,
 } from './resources';
 
@@ -19,6 +20,7 @@ export const api = {
   invoices: invoicesApi,
   appointments: appointmentsApi,
   dunning: dunningApi,
+  settings: settingsApi,
 };
 
 export { API_URL, serverError } from './client';

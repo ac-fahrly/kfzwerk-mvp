@@ -1,9 +1,11 @@
-import { FileText, Pencil, Plus } from 'lucide-react';
+import { useState } from 'react';
+import { FileText, Loader2, Pencil, Plus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { Money } from '@/components/shared/money';
 import { DateCell } from '@/components/shared/date-cell';
 import { Button } from '@/components/ui/button';
+import { serverError } from '@/lib/api';
 import { formatNumber } from '@/lib/format';
 import { newId } from '@/lib/id';
 import { useT } from '@/i18n';
@@ -29,8 +31,16 @@ export function BestellungDetail({ b, onEdit, onDismiss }: Props) {
   const existing = useRechnungForBestellung(b.id);
   const addRechnung = useRechnungen((r) => r.add);
   const navigate = useNavigate();
+  const [creating, setCreating] = useState(false);
 
-  function createInvoice() {
+  /**
+   * AWAIT the store before toasting or navigating. `add` is optimistic and
+   * rethrows, so firing and forgetting would (a) claim success for a POST that
+   * may still 409 on a duplicate invoice number, and (b) land the user on an
+   * invoice whose server-side `absender`/`empfaenger` snapshot has not arrived
+   * yet — the document reads only that snapshot.
+   */
+  async function createInvoice() {
     const today = new Date();
     const in14 = new Date(today.getTime() + 14 * 86400_000);
     const rechnung: Rechnung = {
@@ -45,7 +55,15 @@ export function BestellungDetail({ b, onEdit, onDismiss }: Props) {
       bezahltBetrag: 0,
       status: 'entwurf',
     };
-    addRechnung(rechnung);
+    setCreating(true);
+    try {
+      await addRechnung(rechnung);
+    } catch (err) {
+      toast.error(serverError(err, tc('toasts.createFailed')));
+      return;
+    } finally {
+      setCreating(false);
+    }
     toast.success(tc('toasts.created'));
     onDismiss?.();
     navigate(`/rechnungen/${rechnung.id}`);
@@ -73,8 +91,13 @@ export function BestellungDetail({ b, onEdit, onDismiss }: Props) {
               <span className="num">{existing.nummer}</span>
             </Button>
           ) : b.status === 'fertig' ? (
-            <Button variant="default" size="sm" onClick={createInvoice}>
-              <Plus size={14} />
+            <Button
+              variant="default"
+              size="sm"
+              disabled={creating}
+              onClick={() => void createInvoice()}
+            >
+              {creating ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
               {t('detail.createInvoice')}
             </Button>
           ) : null}
